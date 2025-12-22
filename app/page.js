@@ -1,65 +1,184 @@
-import Image from "next/image";
+/**
+ * Homepage
+ *
+ * Main landing page for Care.xyz platform.
+ *
+ * Sections:
+ * - Hero carousel with CTA
+ * - About section
+ * - Services overview
+ * - Testimonials/Reviews
+ * - Call-to-action
+ *
+ * SEO optimized with metadata
+ */
 
-export default function Home() {
+import Hero from "@/components/Hero"
+import ServiceCard from "@/components/ServiceCard"
+import reviewsData from "@/data/reviews.json"
+import servicesData from "@/data/services.json"
+import Link from "next/link"
+import { FiArrowRight, FiStar } from "react-icons/fi"
+
+export const metadata = {
+  title: "Care.xyz - Professional Caregiving Services in Bangladesh",
+  description:
+    "Find trusted caregivers for babies, elderly, and sick family members. Book verified care services with flexible pricing across Bangladesh.",
+  openGraph: {
+    title: "Care.xyz - Trusted Caregiving Platform",
+    description: "Professional care services for your loved ones",
+  },
+}
+
+export default function HomePage() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.js file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+    <>
+      {/* Hero Section */}
+      <Hero />
+
+      {/* About Section */}
+      <section className="py-20 bg-stone-100 dark:bg-gray-800">
+        <div className="container mx-auto px-4">
+          <div className="max-w-4xl mx-auto text-center">
+            <h2 className="text-3xl md:text-4xl font-bold mb-6 text-gray-900 dark:text-white">
+              Dedicated Care for Aging Adults
+            </h2>
+            <p className="text-lg mb-8 text-gray-700 dark:text-gray-300">
+              At Care.xyz, we understand that your loved ones deserve the best
+              care possible. Our platform connects you with verified,
+              experienced caregivers who provide compassionate and professional
+              services. Whether you need baby care, elderly support, or
+              assistance for sick family members, we're here to help.
+            </p>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12">
+              <div className="card bg-base-100 shadow-lg">
+                <div className="card-body items-center text-center">
+                  <h3 className="card-title text-primary">
+                    Verified Caregivers
+                  </h3>
+                  <p className="text-sm opacity-70">
+                    All our caregivers are background-checked and professionally
+                    trained
+                  </p>
+                </div>
+              </div>
+              <div className="card bg-base-100 shadow-lg">
+                <div className="card-body items-center text-center">
+                  <h3 className="card-title text-primary">Flexible Pricing</h3>
+                  <p className="text-sm opacity-70">
+                    Choose hourly or daily rates that fit your budget and needs
+                  </p>
+                </div>
+              </div>
+              <div className="card bg-base-100 shadow-lg">
+                <div className="card-body items-center text-center">
+                  <h3 className="card-title text-primary">24/7 Support</h3>
+                  <p className="text-sm opacity-70">
+                    Our team is always available to assist you with any concerns
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Services Section */}
+      <section className="py-20 bg-white dark:bg-gray-900">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4 text-gray-900 dark:text-white">
+              Our Services
+            </h2>
+            <p className="text-lg max-w-2xl mx-auto text-gray-600 dark:text-gray-400">
+              Choose from our range of professional caregiving services tailored
+              to meet your family's unique needs
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
+            {servicesData.map((service) => (
+              <ServiceCard key={service.service_id} service={service} />
+            ))}
+          </div>
+
+          <div className="text-center mt-12">
+            <Link href="/services" className="btn btn-primary btn-lg gap-2">
+              View All Services
+              <FiArrowRight />
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Testimonials Section */}
+      <section className="py-20 bg-neutral-100 dark:bg-gray-800">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4 text-gray-900 dark:text-white">
+              Hear From Our Happy Families
+            </h2>
+            <p className="text-lg text-gray-600 dark:text-gray-400">
+              Real stories from families who trust Care.xyz
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
+            {reviewsData.map((review) => (
+              <div key={review.id} className="card bg-base-100 shadow-lg">
+                <div className="card-body">
+                  {/* Rating Stars */}
+                  <div className="flex gap-1 mb-3">
+                    {[...Array(5)].map((_, i) => (
+                      <FiStar
+                        key={i}
+                        className={
+                          i < Math.round(review.rating)
+                            ? "text-yellow-500 fill-yellow-500"
+                            : "text-gray-300"
+                        }
+                      />
+                    ))}
+                  </div>
+
+                  {/* Review Text */}
+                  <p className="text-sm opacity-80 mb-4">"{review.review}"</p>
+
+                  {/* Reviewer Info */}
+                  <div className="flex items-center gap-3">
+                    <div className="avatar">
+                      <div className="w-12 h-12 rounded-full">
+                        <img src={review.photoURL} alt={review.userName} />
+                      </div>
+                    </div>
+                    <div>
+                      <p className="font-semibold">{review.userName}</p>
+                      <p className="text-xs opacity-60">{review.serviceType}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Final CTA Section */}
+      <section className="py-20 bg-sky-100 dark:bg-blue-900 relative isolate">
+        <div className="container mx-auto px-4 text-center">
+          <h2 className="text-3xl md:text-4xl font-bold mb-6 text-gray-900 dark:text-white">
+            Ready to Find the Perfect Caregiver?
+          </h2>
+          <p className="text-lg mb-8 max-w-2xl mx-auto text-gray-700 dark:text-gray-200">
+            Join hundreds of families who trust Care.xyz for their caregiving
+            needs. Start your booking today!
           </p>
+          <Link href="/services" className="btn btn-secondary btn-lg gap-2">
+            Get Started Now
+            <FiArrowRight />
+          </Link>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
-  );
+      </section>
+    </>
+  )
 }

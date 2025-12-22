@@ -1,0 +1,56 @@
+[
+  {
+    "id": "1",
+    "userName": "Sarah Ahmed",
+    "rating": 5.0,
+    "review": "Excellent baby care service! The caregiver was professional, loving, and my baby felt comfortable immediately. Highly recommended!",
+    "serviceType": "Baby Care",
+    "photoURL": "https://randomuser.me/api/portraits/women/32.jpg",
+    "date": "2024-11-15"
+  },
+  {
+    "id": "2",
+    "userName": "Karim Rahman",
+    "rating": 4.8,
+    "review": "Very professional elderly care service. My mother is happy and well-cared for. The caregiver is patient and respectful.",
+    "serviceType": "Elderly Care",
+    "photoURL": "https://randomuser.me/api/portraits/men/45.jpg",
+    "date": "2024-11-10"
+  },
+  {
+    "id": "3",
+    "userName": "Nadia Islam",
+    "rating": 5.0,
+    "review": "Amazing sick care service! The caregiver helped my father recover faster with great medical monitoring and emotional support.",
+    "serviceType": "Sick Care",
+    "photoURL": "https://randomuser.me/api/portraits/women/28.jpg",
+    "date": "2024-11-08"
+  },
+  {
+    "id": "4",
+    "userName": "Tanvir Hossain",
+    "rating": 4.5,
+    "review": "Great baby care service! Professional and trustworthy. My daughter loves her caregiver.",
+    "serviceType": "Baby Care",
+    "photoURL": "https://randomuser.me/api/portraits/men/22.jpg",
+    "date": "2024-11-05"
+  },
+  {
+    "id": "5",
+    "userName": "Fatima Khan",
+    "rating": 4.9,
+    "review": "Wonderful elderly care! The caregiver is kind, patient, and my grandmother feels safe and happy.",
+    "serviceType": "Elderly Care",
+    "photoURL": "https://randomuser.me/api/portraits/women/40.jpg",
+    "date": "2024-10-28"
+  },
+  {
+    "id": "6",
+    "userName": "Rahim Uddin",
+    "rating": 4.7,
+    "review": "Excellent care for my recovering wife. The caregiver was skilled and compassionate. Thank you Care.xyz!",
+    "serviceType": "Sick Care",
+    "photoURL": "https://randomuser.me/api/portraits/men/35.jpg",
+    "date": "2024-10-20"
+  }
+]

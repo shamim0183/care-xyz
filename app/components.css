@@ -1,0 +1,108 @@
+/* Custom Component Styles - Replacing DaisyUI */
+
+/* Button Styles */
+.btn {
+  @apply inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md transition-all duration-200;
+}
+
+.btn-primary {
+  @apply bg-primary-500 text-white hover:bg-primary-600 active:bg-primary-700 focus:ring-2 focus:ring-primary-400 focus:ring-offset-2 shadow-md hover:shadow-lg;
+}
+
+.btn-secondary {
+  @apply bg-secondary-500 text-white hover:bg-secondary-600 active:bg-secondary-700 focus:ring-2 focus:ring-secondary-400 focus:ring-offset-2 shadow-md hover:shadow-lg;
+}
+
+.btn-ghost {
+  @apply bg-transparent hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-900 dark:text-gray-100 border-transparent;
+}
+
+.btn-lg {
+  @apply px-6 py-3 text-base font-semibold;
+}
+
+.btn-circle {
+  @apply rounded-full p-2 w-10 h-10 flex items-center justify-center;
+}
+
+/* Card Styles */
+.card {
+  @apply bg-white dark:bg-gray-800 rounded-lg overflow-hidden transition-shadow duration-200 border border-gray-200 dark:border-gray-700;
+}
+
+.card-body {
+  @apply p-6;
+}
+
+.card-title {
+  @apply text-xl font-bold mb-2 text-gray-900 dark:text-gray-100;
+}
+
+/* Navbar Styles */
+.navbar {
+  @apply w-full;
+}
+
+.navbar-start {
+  @apply flex items-center gap-2;
+}
+
+.navbar-center {
+  @apply flex-1 flex justify-center;
+}
+
+.navbar-end {
+  @apply flex items-center gap-2;
+}
+
+/* Menu Styles */
+.menu {
+  @apply flex flex-col gap-1;
+}
+
+.menu-horizontal {
+  @apply flex-row gap-2;
+}
+
+.menu li a {
+  @apply px-4 py-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors text-gray-700 dark:text-gray-200 font-medium;
+}
+
+.menu li a.active {
+  @apply bg-primary-100 dark:bg-primary-900 text-primary-700 dark:text-primary-300 font-semibold;
+}
+
+/* Badge Styles */
+.badge {
+  @apply inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold;
+}
+
+.badge-primary {
+  @apply bg-primary-100 dark:bg-primary-900 text-primary-800 dark:text-primary-200 border border-primary-300 dark:border-primary-700;
+}
+
+.badge-outline {
+  @apply bg-transparent border-2 border-primary-500 text-primary-600 dark:text-primary-400;
+}
+
+/* Dropdown Styles */
+.dropdown {
+  @apply relative;
+}
+
+.dropdown-content {
+  @apply absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white dark:bg-gray-800 ring-1 ring-black dark:ring-gray-700 ring-opacity-5 z-50 border border-gray-200 dark:border-gray-700;
+}
+
+.dropdown-end {
+  @apply right-0;
+}
+
+/* Base Background Colors */
+.bg-base-100 {
+  @apply bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100;
+}
+
+.bg-base-200 {
+  @apply bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-gray-100;
+}

@@ -1,0 +1,28 @@
+/* Fix for diagonal line rendering artifacts */
+section,
+footer {
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  -webkit-transform: translateZ(0) scale(1, 1);
+  transform: translateZ(0) scale(1, 1);
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
+}
+
+/* Ensure smooth rendering for all backgrounds */
+.bg-sky-100,
+.bg-stone-100,
+.bg-neutral-100,
+.bg-blue-50,
+.bg-slate-800,
+.dark\:bg-blue-900,
+.dark\:bg-gray-800 {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  will-change: transform;
+}
+
+/* Force proper background rendering */
+footer {
+  box-shadow: inset 0 1px 0 0 rgb(30, 41, 59);
+}

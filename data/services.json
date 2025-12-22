@@ -1,0 +1,59 @@
+[
+  {
+    "service_id": "baby-care",
+    "name": "Baby Care Service",
+    "description": "Professional and loving care for your little ones. Our experienced caregivers provide comprehensive baby care including feeding, diaper changing, playtime activities, sleep monitoring, and ensuring your baby's safety and comfort at all times. We understand that your baby deserves the best care, and we're here to provide peace of mind while you're away.",
+    "shortDescription": "Professional baby care with experienced caregivers for your little ones' safety and happiness.",
+    "features": [
+      "Feeding and bottle preparation",
+      "Diaper changing and hygiene care",
+      "Playtime and developmental activities",
+      "Sleep monitoring and nap routines",
+      "Baby safety and emergency care",
+      "Daily activity reports for parents"
+    ],
+    "chargePerHour": 200,
+    "chargePerDay": 3000,
+    "image": "https://images.unsplash.com/photo-1515488042361-ee00e0ddd4e4?w=800&h=600&fit=crop",
+    "category": "child",
+    "isActive": true
+  },
+  {
+    "service_id": "elderly-care",
+    "name": "Elderly Care Service",
+    "description": "Compassionate and professional care for senior citizens. Our trained caregivers assist with daily activities, medication reminders, mobility support, companionship, and ensure the well-being and dignity of your elderly loved ones. We provide personalized care that respects independence while offering the support needed for a comfortable and safe life.",
+    "shortDescription": "Compassionate elderly care with trained professionals for your senior family members' well-being.",
+    "features": [
+      "Assistance with daily living activities",
+      "Medication reminders and management",
+      "Mobility and walking support",
+      "Companionship and emotional support",
+      "Meal preparation and feeding assistance",
+      "Personal hygiene and grooming care"
+    ],
+    "chargePerHour": 250,
+    "chargePerDay": 3500,
+    "image": "https://images.unsplash.com/photo-1581579438747-1dc8d17bbce4?w=800&h=600&fit=crop",
+    "category": "elderly",
+    "isActive": true
+  },
+  {
+    "service_id": "sick-care",
+    "name": "Sick People Care Service",
+    "description": "Specialized care for individuals recovering from illness or managing chronic conditions. Our skilled caregivers provide medical monitoring, personal hygiene assistance, meal support, medication administration, and emotional comfort. We ensure your loved ones receive the attention and care they need during challenging times.",
+    "shortDescription": "Specialized care for sick individuals with skilled caregivers for recovery and comfort.",
+    "features": [
+      "Health monitoring and vital signs check",
+      "Medication administration and reminders",
+      "Personal hygiene and bathing assistance",
+      "Nutritious meal preparation and feeding",
+      "Mobility assistance and exercise support",
+      "Emotional support and companionship"
+    ],
+    "chargePerHour": 300,
+    "chargePerDay": 4000,
+    "image": "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=800&h=600&fit=crop",
+    "category": "sick",
+    "isActive": true
+  }
+]
