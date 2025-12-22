@@ -18,22 +18,17 @@ import mongoose from "mongoose"
 
 const UserSchema = new mongoose.Schema(
   {
-    // National ID Number - unique identifier
     nidNo: {
       type: String,
       required: [true, "NID number is required"],
       unique: true,
       trim: true,
     },
-
-    // Full name of the user
     name: {
       type: String,
       required: [true, "Name is required"],
       trim: true,
     },
-
-    // Email address - must be unique
     email: {
       type: String,
       required: [true, "Email is required"],
@@ -45,23 +40,17 @@ const UserSchema = new mongoose.Schema(
         "Please provide a valid email address",
       ],
     },
-
-    // Contact number
     contact: {
       type: String,
       required: [true, "Contact number is required"],
       trim: true,
     },
-
-    // Hashed password (bcrypt)
     password: {
       type: String,
       required: [true, "Password is required"],
       minlength: [6, "Password must be at least 6 characters"],
-      select: false, // Don't return password in queries by default
+      select: false,
     },
-
-    // User role - determines permissions
     role: {
       type: String,
       enum: ["user", "admin"],
@@ -69,14 +58,11 @@ const UserSchema = new mongoose.Schema(
     },
   },
   {
-    // Automatically add createdAt and updatedAt timestamps
     timestamps: true,
   }
 )
 
-// Index for faster queries on email
 UserSchema.index({ email: 1 })
 
-// Export the model
-// Check if model already exists to prevent OverwriteModelError during hot reload
+// Prevent OverwriteModelError during hot reload
 export default mongoose.models.User || mongoose.model("User", UserSchema)
