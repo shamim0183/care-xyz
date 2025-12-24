@@ -33,10 +33,13 @@ export default function Navbar() {
    * Navigation Links
    *
    * Public links available to all users
+   * Services hidden for admins (they manage, don't book)
    */
   const publicLinks = [
     { href: "/", label: "Home" },
-    { href: "/services", label: "Services" },
+    ...(session?.user?.role !== "admin"
+      ? [{ href: "/services", label: "Services" }]
+      : []),
     { href: "/about", label: "About" },
   ]
 
@@ -122,14 +125,17 @@ export default function Navbar() {
                         <FiUser /> My Profile
                       </Link>
                     </li>
-                    <li>
-                      <Link
-                        href="/my-bookings"
-                        onClick={() => setMobileMenuOpen(false)}
-                      >
-                        <FiBriefcase /> My Bookings
-                      </Link>
-                    </li>
+                    {/* My Bookings - Hidden for admins */}
+                    {session.user.role !== "admin" && (
+                      <li>
+                        <Link
+                          href="/my-bookings"
+                          onClick={() => setMobileMenuOpen(false)}
+                        >
+                          <FiBriefcase /> My Bookings
+                        </Link>
+                      </li>
+                    )}
                     {session.user.role === "admin" && (
                       <li>
                         <Link
@@ -251,21 +257,24 @@ export default function Navbar() {
                         </span>
                       </Link>
                     </li>
-                    <li>
-                      <Link
-                        href="/my-bookings"
-                        onClick={() => setUserMenuOpen(false)}
-                        className="flex items-center gap-3 px-4 py-3 hover:bg-[#FFF0F3] dark:hover:bg-gray-700 transition-colors group"
-                      >
-                        <FiBriefcase
-                          className="text-gray-500 dark:text-gray-400 group-hover:text-[#C92C5C]"
-                          size={18}
-                        />
-                        <span className="font-medium text-gray-700 dark:text-gray-300 group-hover:text-[#C92C5C]">
-                          My Bookings
-                        </span>
-                      </Link>
-                    </li>
+                    {/* My Bookings - Hidden for admins */}
+                    {session.user.role !== "admin" && (
+                      <li>
+                        <Link
+                          href="/my-bookings"
+                          onClick={() => setUserMenuOpen(false)}
+                          className="flex items-center gap-3 px-4 py-3 hover:bg-[#FFF0F3] dark:hover:bg-gray-700 transition-colors group"
+                        >
+                          <FiBriefcase
+                            className="text-gray-500 dark:text-gray-400 group-hover:text-[#C92C5C]"
+                            size={18}
+                          />
+                          <span className="font-medium text-gray-700 dark:text-gray-300 group-hover:text-[#C92C5C]">
+                            My Bookings
+                          </span>
+                        </Link>
+                      </li>
+                    )}
                     {session.user.role === "admin" && (
                       <li>
                         <Link

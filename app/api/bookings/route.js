@@ -13,7 +13,6 @@ import { auth } from "@/lib/auth"
 import { sendBookingConfirmationEmail } from "@/lib/email"
 import connectDB from "@/lib/mongodb"
 import Booking from "@/models/Booking"
-import User from "@/models/User"
 import { NextResponse } from "next/server"
 
 /**
@@ -121,12 +120,19 @@ export async function POST(req) {
 
     // Send email invoice to user
     try {
-      console.log("Attempting to send email...")
-      const user = await User.findById(session.user.id)
-      if (user && user.email) {
+      console.log("📧 Sending booking confirmation email...")
+
+      // Use session data directly - session already has email from auth
+      const userEmail = session.user.email
+      const userName = session.user.name || "Valued Customer"
+
+      console.log("📝 Email recipient:", userEmail)
+      console.log("👤 User name:", userName)
+
+      if (userEmail) {
         await sendBookingConfirmationEmail({
-          to: user.email,
-          userName: user.name,
+          to: userEmail,
+          userName: userName,
           bookingDetails: {
             serviceName: booking.serviceName,
             duration: booking.duration,
@@ -137,11 +143,13 @@ export async function POST(req) {
             createdAt: booking.createdAt,
           },
         })
-        console.log("Email sent successfully")
+        console.log("✅ Email sent successfully to:", userEmail)
+      } else {
+        console.log("⚠️ No email in session - skipping email")
       }
     } catch (emailError) {
       // Log email error but don't fail the booking
-      console.error("Email send failed:", emailError)
+      console.error("❌ Email send failed:", emailError)
     }
 
     return NextResponse.json(
