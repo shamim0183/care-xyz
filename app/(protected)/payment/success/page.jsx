@@ -12,7 +12,7 @@
 import { formatPrice } from "@/lib/utils"
 import Link from "next/link"
 import { useSearchParams } from "next/navigation"
-import { useEffect, useState } from "react"
+import { Suspense, useEffect, useState } from "react"
 import { FiCheckCircle, FiHome } from "react-icons/fi"
 
 function PaymentSuccessContent() {
