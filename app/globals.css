@@ -58,3 +58,15 @@ html {
 ::-webkit-scrollbar-thumb:hover {
   background: #555;
 }
+
+/* Swiper Carousel Pagination - Burgundy */
+.swiper-pagination-bullet {
+  background: rgba(201, 44, 92, 0.5) !important;
+  opacity: 1 !important;
+}
+
+.swiper-pagination-bullet-active {
+  background: #c92c5c !important;
+  width: 24px !important;
+  border-radius: 6px !important;
+}

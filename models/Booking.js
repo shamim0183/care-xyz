@@ -26,8 +26,7 @@ const BookingSchema = new mongoose.Schema(
       required: [true, "User ID is required"],
     },
     serviceId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Service",
+      type: String,
       required: [true, "Service ID is required"],
     },
     serviceName: {
@@ -87,6 +86,14 @@ const BookingSchema = new mongoose.Schema(
       type: String,
       default: null,
     },
+    stripeSessionId: {
+      type: String,
+      default: null,
+    },
+    paidAt: {
+      type: Date,
+      default: null,
+    },
   },
   {
     timestamps: true,
@@ -97,5 +104,9 @@ BookingSchema.index({ userId: 1, createdAt: -1 })
 BookingSchema.index({ status: 1 })
 BookingSchema.index({ paymentStatus: 1 })
 
-export default mongoose.models.Booking ||
-  mongoose.model("Booking", BookingSchema)
+// Force delete cached model to ensure schema changes are applied
+if (mongoose.models.Booking) {
+  delete mongoose.models.Booking
+}
+
+export default mongoose.model("Booking", BookingSchema)

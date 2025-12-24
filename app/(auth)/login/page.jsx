@@ -125,16 +125,19 @@ export default function LoginPage() {
                 />
               </div>
               <div className="text-right mt-2">
-                <Link href="#" className="text-sm text-primary hover:underline">
+                <Link
+                  href="#"
+                  className="text-sm text-[#C92C5C] hover:underline"
+                >
                   Forgot password?
                 </Link>
               </div>
             </div>
 
-            {/* Submit Button */}
+            {/* Submit Button - Burgundy */}
             <button
               type="submit"
-              className="w-full bg-primary hover:bg-primary/90 text-white font-semibold py-3 px-4 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full bg-[#C92C5C] hover:bg-[#A82349] text-white font-semibold py-3 px-4 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-[#C92C5C] focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed shadow-md hover:shadow-lg"
               disabled={loading}
             >
               {loading ? "Logging in..." : "Login"}
@@ -167,7 +170,7 @@ export default function LoginPage() {
             Don't have an account?{" "}
             <Link
               href="/register"
-              className="text-primary font-semibold hover:underline"
+              className="text-[#C92C5C] font-semibold hover:underline"
             >
               Register here
             </Link>

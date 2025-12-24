@@ -37,10 +37,10 @@ export default function HomePage() {
       <Hero />
 
       {/* About Section */}
-      <section className="py-20 bg-stone-100 dark:bg-gray-800">
+      <section className="py-20 bg-[#FFF0F3] dark:bg-gray-800">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto text-center">
-            <h2 className="text-3xl md:text-4xl font-bold mb-6 text-gray-900 dark:text-white">
+            <h2 className="text-3xl md:text-4xl font-bold font-serif mb-6 text-gray-900 dark:text-white">
               Dedicated Care for Aging Adults
             </h2>
             <p className="text-lg mb-8 text-gray-700 dark:text-gray-300">
@@ -51,9 +51,9 @@ export default function HomePage() {
               assistance for sick family members, we're here to help.
             </p>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12">
-              <div className="card bg-base-100 shadow-lg">
+              <div className="card bg-white dark:bg-gray-700 shadow-lg hover:shadow-xl transition-shadow">
                 <div className="card-body items-center text-center">
-                  <h3 className="card-title text-primary">
+                  <h3 className="card-title text-[#C92C5C] font-serif">
                     Verified Caregivers
                   </h3>
                   <p className="text-sm opacity-70">
@@ -87,7 +87,7 @@ export default function HomePage() {
       <section className="py-20 bg-white dark:bg-gray-900">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4 text-gray-900 dark:text-white">
+            <h2 className="text-3xl md:text-4xl font-bold font-serif mb-4 text-gray-900 dark:text-white">
               Our Services
             </h2>
             <p className="text-lg max-w-2xl mx-auto text-gray-600 dark:text-gray-400">
@@ -103,7 +103,10 @@ export default function HomePage() {
           </div>
 
           <div className="text-center mt-12">
-            <Link href="/services" className="btn btn-primary btn-lg gap-2">
+            <Link
+              href="/services"
+              className="bg-[#C92C5C] hover:bg-[#A82349] text-white font-semibold py-4 px-8 rounded-lg inline-flex items-center gap-2 shadow-md hover:shadow-lg transition-all"
+            >
               View All Services
               <FiArrowRight />
             </Link>
@@ -115,7 +118,7 @@ export default function HomePage() {
       <section className="py-20 bg-neutral-100 dark:bg-gray-800">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4 text-gray-900 dark:text-white">
+            <h2 className="text-3xl md:text-4xl font-bold font-serif mb-4 text-gray-900 dark:text-white">
               Hear From Our Happy Families
             </h2>
             <p className="text-lg text-gray-600 dark:text-gray-400">
@@ -164,16 +167,19 @@ export default function HomePage() {
       </section>
 
       {/* Final CTA Section */}
-      <section className="py-20 bg-sky-100 dark:bg-blue-900 relative isolate">
+      <section className="py-20 bg-gradient-to-br from-[#FFF0F3] to-[#FFE5EC] dark:bg-gradient-to-br dark:from-gray-800 dark:to-gray-900 relative isolate">
         <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold mb-6 text-gray-900 dark:text-white">
+          <h2 className="text-3xl md:text-4xl font-bold font-serif mb-6 text-gray-900 dark:text-white">
             Ready to Find the Perfect Caregiver?
           </h2>
           <p className="text-lg mb-8 max-w-2xl mx-auto text-gray-700 dark:text-gray-200">
             Join hundreds of families who trust Care.xyz for their caregiving
             needs. Start your booking today!
           </p>
-          <Link href="/services" className="btn btn-secondary btn-lg gap-2">
+          <Link
+            href="/services"
+            className="bg-[#C92C5C] hover:bg-[#A82349] text-white font-semibold py-4 px-8 rounded-lg inline-flex items-center gap-2 shadow-md hover:shadow-lg transition-all"
+          >
             Get Started Now
             <FiArrowRight />
           </Link>

@@ -69,13 +69,13 @@ export default function Hero() {
 
               <div className="container mx-auto px-4 relative z-10">
                 <div className="max-w-4xl mx-auto text-center">
-                  {/* Subtitle Badge - Solid for better visibility */}
-                  <div className="inline-block mb-4 px-6 py-2.5 bg-primary rounded-full text-white font-semibold shadow-2xl">
+                  {/* Subtitle Badge - Burgundy for Welleden theme */}
+                  <div className="inline-block mb-4 px-6 py-2.5 bg-[#C92C5C] rounded-full text-white font-semibold shadow-2xl">
                     {slide.subtitle}
                   </div>
 
-                  {/* Main Title - Pure white with strong shadow */}
-                  <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-white drop-shadow-2xl leading-tight">
+                  {/* Main Title - Serif font with strong shadow */}
+                  <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold font-serif mb-6 text-white drop-shadow-2xl leading-tight">
                     {slide.title}
                   </h1>
 
@@ -84,10 +84,10 @@ export default function Hero() {
                     {slide.description}
                   </p>
 
-                  {/* CTA Button */}
+                  {/* CTA Button - Burgundy */}
                   <Link
                     href="/services"
-                    className="btn btn-primary btn-lg gap-2 inline-flex shadow-2xl hover:shadow-primary/50 hover:scale-105 transition-all"
+                    className="bg-[#C92C5C] hover:bg-[#A82349] text-white font-semibold py-4 px-8 rounded-lg gap-2 inline-flex shadow-2xl hover:shadow-lg transition-all hover:scale-105"
                   >
                     Find Care Services
                     <FiArrowRight />
@@ -106,9 +106,9 @@ export default function Hero() {
             {stats.map((stat, index) => (
               <div key={index} className="text-center">
                 <div className="flex justify-center mb-4">
-                  <stat.icon className="w-12 h-12 text-primary" />
+                  <stat.icon className="w-12 h-12 text-[#C92C5C]" />
                 </div>
-                <div className="text-4xl font-bold text-primary mb-2">
+                <div className="text-4xl font-bold text-[#C92C5C] mb-2">
                   {stat.value}
                 </div>
                 <div className="text-sm opacity-70">{stat.label}</div>

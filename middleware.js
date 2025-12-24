@@ -1,28 +1,42 @@
 /**
  * Middleware for Route Protection
  *
- * This middleware runs on every request and protects routes that require authentication.
- * If a user tries to access a protected route without being logged in, they are
- * redirected to the login page with a callback URL to return after login.
- *
- * Protected Routes:
- * - /booking/* - Booking pages (requires login)
- * - /my-bookings - User's bookings page (requires login)
- * - /payment/* - Payment pages (requires login)
+ * Simple middleware that redirects unauthenticated users to login.
+ * Does NOT import MongoDB - uses only NextAuth session checking.
  */
 
-export { auth as middleware } from "@/lib/auth"
+import { getToken } from "next-auth/jwt"
+import { NextResponse } from "next/server"
 
-/**
- * Matcher Configuration
- *
- * Specify which routes this middleware should run on.
- * This prevents unnecessary middleware execution on public routes.
- */
+export async function middleware(request) {
+  const token = await getToken({
+    req: request,
+    secret: process.env.NEXTAUTH_SECRET,
+  })
+
+  const { pathname } = request.nextUrl
+
+  // Check if user is authenticated
+  if (!token) {
+    const loginUrl = new URL("/login", request.url)
+    loginUrl.searchParams.set("callbackUrl", pathname)
+    return NextResponse.redirect(loginUrl)
+  }
+
+  // Check admin routes
+  if (pathname.startsWith("/admin") && token.role !== "admin") {
+    return NextResponse.redirect(new URL("/", request.url))
+  }
+
+  return NextResponse.next()
+}
+
 export const config = {
   matcher: [
-    "/booking/:path*", // All booking routes
-    "/my-bookings", // My bookings page
-    "/payment/:path*", // Payment routes
+    "/booking/:path*",
+    "/my-bookings",
+    "/payment/:path*",
+    "/profile",
+    "/admin/:path*",
   ],
 }

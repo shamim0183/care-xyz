@@ -45,7 +45,9 @@ export default function AboutPage() {
     <div className="container mx-auto px-4 py-12">
       {/* Hero Section */}
       <div className="text-center mb-16">
-        <h1 className="text-4xl md:text-5xl font-bold mb-6">About Care.xyz</h1>
+        <h1 className="text-4xl md:text-5xl font-bold font-serif mb-6">
+          About Care.xyz
+        </h1>
         <p className="text-lg opacity-80 max-w-3xl mx-auto">
           Professional and Compassionate Senior Assistance
         </p>
@@ -54,7 +56,9 @@ export default function AboutPage() {
       {/* Mission Section */}
       <section className="mb-20">
         <div className="max-w-4xl mx-auto">
-          <h2 className="text-3xl font-bold mb-6 text-center">Our Mission</h2>
+          <h2 className="text-3xl font-bold font-serif mb-6 text-center">
+            Our Mission
+          </h2>
           <p className="text-lg opacity-80 leading-relaxed text-center">
             At Care.xyz, our mission is to provide families across Bangladesh
             with access to professional, compassionate, and reliable caregiving
@@ -65,15 +69,20 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* Values Section */}
-      <section className="mb-20 bg-base-200 py-16 -mx-4 px-4">
+      {/* Values Section - Burgundy Icons */}
+      <section className="mb-20 bg-[#FFF0F3] dark:bg-gray-800 py-16 -mx-4 px-4">
         <div className="max-w-6xl mx-auto">
-          <h2 className="text-3xl font-bold mb-12 text-center">Our Values</h2>
+          <h2 className="text-3xl font-bold font-serif mb-12 text-center">
+            Our Values
+          </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {values.map((value, index) => (
-              <div key={index} className="card bg-base-100 shadow-lg">
+              <div
+                key={index}
+                className="card bg-white dark:bg-gray-700 shadow-lg hover:shadow-xl transition-shadow"
+              >
                 <div className="card-body items-center text-center">
-                  <value.icon className="w-12 h-12 text-primary mb-4" />
+                  <value.icon className="w-12 h-12 text-[#C92C5C] mb-4" />
                   <h3 className="card-title text-lg">{value.title}</h3>
                   <p className="text-sm opacity-70">{value.description}</p>
                 </div>
@@ -86,10 +95,12 @@ export default function AboutPage() {
       {/* How It Works */}
       <section className="mb-20">
         <div className="max-w-4xl mx-auto">
-          <h2 className="text-3xl font-bold mb-12 text-center">How It Works</h2>
+          <h2 className="text-3xl font-bold font-serif mb-12 text-center">
+            How It Works
+          </h2>
           <div className="space-y-8">
             <div className="flex gap-4">
-              <div className="flex-shrink-0 w-12 h-12 rounded-full bg-primary text-primary-content flex items-center justify-center font-bold">
+              <div className="flex-shrink-0 w-12 h-12 rounded-full bg-[#C92C5C] text-white flex items-center justify-center font-bold">
                 1
               </div>
               <div>
@@ -102,7 +113,7 @@ export default function AboutPage() {
             </div>
 
             <div className="flex gap-4">
-              <div className="flex-shrink-0 w-12 h-12 rounded-full bg-primary text-primary-content flex items-center justify-center font-bold">
+              <div className="flex-shrink-0 w-12 h-12 rounded-full bg-[#C92C5C] text-white flex items-center justify-center font-bold">
                 2
               </div>
               <div>
@@ -116,7 +127,7 @@ export default function AboutPage() {
             </div>
 
             <div className="flex gap-4">
-              <div className="flex-shrink-0 w-12 h-12 rounded-full bg-primary text-primary-content flex items-center justify-center font-bold">
+              <div className="flex-shrink-0 w-12 h-12 rounded-full bg-[#C92C5C] text-white flex items-center justify-center font-bold">
                 3
               </div>
               <div>
@@ -129,7 +140,7 @@ export default function AboutPage() {
             </div>
 
             <div className="flex gap-4">
-              <div className="flex-shrink-0 w-12 h-12 rounded-full bg-primary text-primary-content flex items-center justify-center font-bold">
+              <div className="flex-shrink-0 w-12 h-12 rounded-full bg-[#C92C5C] text-white flex items-center justify-center font-bold">
                 4
               </div>
               <div>
@@ -144,16 +155,21 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* CTA Section */}
+      {/* CTA Section - Burgundy */}
       <section className="text-center">
-        <div className="card bg-primary text-primary-content">
+        <div className="card bg-[#C92C5C] text-white shadow-xl">
           <div className="card-body items-center">
-            <h2 className="card-title text-3xl mb-4">Ready to Get Started?</h2>
+            <h2 className="card-title text-3xl font-serif mb-4">
+              Ready to Get Started?
+            </h2>
             <p className="mb-6 max-w-xl">
               Join hundreds of families who trust Care.xyz for their caregiving
               needs. Book your first service today!
             </p>
-            <a href="/services" className="btn btn-secondary">
+            <a
+              href="/services"
+              className="btn bg-white text-[#C92C5C] hover:bg-gray-100 border-0"
+            >
               Explore Services
             </a>
           </div>

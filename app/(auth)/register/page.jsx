@@ -6,17 +6,29 @@
 
 "use client"
 
+import axios from "axios"
 import { signIn } from "next-auth/react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
 import toast, { Toaster } from "react-hot-toast"
 import { FcGoogle } from "react-icons/fc"
-import { FiCreditCard, FiLock, FiMail, FiPhone, FiUser } from "react-icons/fi"
+import {
+  FiCamera,
+  FiCreditCard,
+  FiLink,
+  FiLock,
+  FiMail,
+  FiPhone,
+  FiUpload,
+  FiUser,
+} from "react-icons/fi"
 
 export default function RegisterPage() {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
+  const [uploadMethod, setUploadMethod] = useState("upload")
+  const [imagePreview, setImagePreview] = useState(null)
   const [formData, setFormData] = useState({
     nidNo: "",
     name: "",
@@ -24,6 +36,7 @@ export default function RegisterPage() {
     contact: "",
     password: "",
     confirmPassword: "",
+    profileImage: "",
   })
 
   // Password validation state
@@ -44,6 +57,47 @@ export default function RegisterPage() {
       hasNumber: /[0-9]/.test(password),
       hasSymbol: /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password),
     })
+  }
+
+  const handleImageUpload = async (e) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error("Image size must be less than 5MB")
+      return
+    }
+
+    if (!file.type.startsWith("image/")) {
+      toast.error("Please upload an image file")
+      return
+    }
+
+    setLoading(true)
+    const uploadFormData = new FormData()
+    uploadFormData.append("image", file)
+
+    try {
+      const { data } = await axios.post("/api/upload/image", uploadFormData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      })
+
+      setFormData({ ...formData, profileImage: data.url })
+      setImagePreview(data.url)
+      toast.success("Image uploaded successfully!")
+    } catch (error) {
+      console.error("Upload error:", error)
+      toast.error("Failed to upload image")
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleImageUrlChange = (url) => {
+    setFormData({ ...formData, profileImage: url })
+    if (url) {
+      setImagePreview(url)
+    }
   }
 
   const handleChange = (e) => {
@@ -81,6 +135,7 @@ export default function RegisterPage() {
           email: formData.email,
           contact: formData.contact,
           password: formData.password,
+          profileImage: formData.profileImage,
         }),
       })
 
@@ -214,7 +269,85 @@ export default function RegisterPage() {
                   />
                 </div>
               </div>
+            </div>
 
+            {/* Profile Image Section - Welleden Style */}
+            <div className="border-2 border-gray-200 rounded-lg p-6 bg-gray-50/30">
+              <label className="block mb-4">
+                <span className="text-sm font-semibold text-gray-700 uppercase tracking-wide flex items-center gap-2">
+                  <FiCamera className="text-[#C92C5C]" />
+                  Profile Picture (Optional)
+                </span>
+              </label>
+
+              {/* Image Preview - Refined */}
+              {imagePreview && (
+                <div className="flex justify-center mb-4">
+                  <div className="w-20 h-20 rounded-full overflow-hidden shadow-md border-4 border-white ring-2 ring-[#C92C5C]/20">
+                    <img
+                      src={imagePreview}
+                      alt="Profile preview"
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                </div>
+              )}
+
+              {/* Upload Method Toggle - Burgundy Pills */}
+              <div className="flex gap-3 mb-4">
+                <button
+                  type="button"
+                  onClick={() => setUploadMethod("upload")}
+                  className={`flex-1 px-4 py-2 rounded-lg font-medium text-sm transition-all duration-300 flex items-center justify-center gap-2 ${
+                    uploadMethod === "upload"
+                      ? "bg-[#C92C5C] text-white shadow-md"
+                      : "bg-white text-[#C92C5C] border-2 border-[#C92C5C] hover:bg-[#C92C5C]/5"
+                  }`}
+                >
+                  <FiUpload />
+                  Upload
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setUploadMethod("url")}
+                  className={`flex-1 px-4 py-2 rounded-lg font-medium text-sm transition-all duration-300 flex items-center justify-center gap-2 ${
+                    uploadMethod === "url"
+                      ? "bg-[#C92C5C] text-white shadow-md"
+                      : "bg-white text-[#C92C5C] border-2 border-[#C92C5C] hover:bg-[#C92C5C]/5"
+                  }`}
+                >
+                  <FiLink />
+                  URL
+                </button>
+              </div>
+
+              {/* Upload from Device */}
+              {uploadMethod === "upload" && (
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageUpload}
+                  className="w-full text-sm text-gray-600 file:mr-4 file:py-2.5 file:px-5 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-[#C92C5C] file:text-white hover:file:bg-[#A82349] file:cursor-pointer cursor-pointer border-2 border-gray-200 rounded-lg focus:outline-none focus:border-[#C92C5C] transition-colors"
+                  disabled={loading}
+                />
+              )}
+
+              {/* Paste URL */}
+              {uploadMethod === "url" && (
+                <input
+                  type="url"
+                  placeholder="https://example.com/image.jpg"
+                  value={formData.profileImage}
+                  onChange={(e) => handleImageUrlChange(e.target.value)}
+                  className="w-full px-4 py-2.5 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-[#C92C5C] transition-colors text-gray-900 dark:text-white placeholder-gray-400 bg-white dark:bg-gray-700 text-sm"
+                />
+              )}
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
+                Max 5MB. Hosted on ImgBB.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
               {/* Password */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
@@ -333,10 +466,10 @@ export default function RegisterPage() {
               </div>
             </div>
 
-            {/* Submit Button */}
+            {/* Submit Button - Burgundy */}
             <button
               type="submit"
-              className="w-full bg-primary hover:bg-primary/90 text-white font-semibold py-3 px-4 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full bg-[#C92C5C] hover:bg-[#A82349] text-white font-semibold py-3 px-4 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-[#C92C5C] focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed shadow-md hover:shadow-lg"
               disabled={loading}
             >
               {loading ? "Creating Account..." : "Create Account"}
@@ -369,7 +502,7 @@ export default function RegisterPage() {
             Already have an account?{" "}
             <Link
               href="/login"
-              className="text-primary font-semibold hover:underline"
+              className="text-[#C92C5C] font-semibold hover:underline"
             >
               Login here
             </Link>

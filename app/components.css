@@ -68,8 +68,11 @@
   @apply px-4 py-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors text-gray-700 dark:text-gray-200 font-medium;
 }
 
+/* Burgundy active state - override inline classes */
 .menu li a.active {
-  @apply bg-primary-100 dark:bg-primary-900 text-primary-700 dark:text-primary-300 font-semibold;
+  background-color: #c92c5c !important;
+  color: white !important;
+  font-weight: 600;
 }
 
 /* Badge Styles */

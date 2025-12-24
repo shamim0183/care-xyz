@@ -37,8 +37,8 @@ export default function ServiceCard({ service }) {
           className="object-cover transition-transform duration-300 hover:scale-110"
         />
 
-        {/* Price Badge */}
-        <div className="absolute top-4 right-4 badge badge-primary badge-lg">
+        {/* Price Badge - Burgundy */}
+        <div className="absolute top-4 right-4 px-4 py-2 bg-[#C92C5C] text-white font-semibold rounded-lg shadow-md text-sm">
           From {formatPrice(service.chargePerHour)}/hr
         </div>
       </figure>
@@ -69,7 +69,7 @@ export default function ServiceCard({ service }) {
         <div className="card-actions justify-end mt-4">
           <Link
             href={`/service/${service.service_id}`}
-            className="btn btn-primary btn-sm"
+            className="bg-[#C92C5C] hover:bg-[#A82349] text-white font-semibold py-2 px-6 rounded-lg inline-flex items-center gap-2 transition-all shadow-md hover:shadow-lg"
           >
             View Details
             <FiArrowRight />

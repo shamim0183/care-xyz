@@ -28,15 +28,15 @@ export default function Footer() {
 
   return (
     <footer
-      className="bg-slate-800 dark:bg-slate-900 text-gray-100"
-      style={{ outline: "1px solid rgb(30, 41, 59)", willChange: "transform" }}
+      className="bg-gradient-to-br from-slate-800 to-slate-900 dark:from-gray-900 dark:to-black text-gray-100 border-t border-[#C92C5C]/20"
+      style={{ willChange: "transform" }}
     >
-      <div className="container mx-auto px-4 py-10">
+      <div className="container mx-auto px-4 py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 w-full">
           {/* Brand Section */}
           <div className="text-left">
-            <h3 className="font-bold text-lg mb-3">
-              <span className="text-primary">Care</span>.xyz
+            <h3 className="font-bold text-xl mb-3 font-serif">
+              <span className="text-[#C92C5C]">Care</span>.xyz
             </h3>
             <p className="text-sm">
               Professional and compassionate caregiving services for your loved
@@ -46,17 +46,22 @@ export default function Footer() {
 
           {/* Quick Links */}
           <div className="text-left">
-            <h4 className="font-semibold mb-3">Quick Links</h4>
-            <ul className="space-y-2">
+            <h4 className="font-semibold mb-4 text-[#C92C5C] uppercase tracking-wide text-sm">
+              Quick Links
+            </h4>
+            <ul className="space-y-2.5">
               <li>
-                <Link href="/" className="hover:text-primary transition-colors">
+                <Link
+                  href="/"
+                  className="hover:text-[#C92C5C] transition-colors text-gray-300 hover:translate-x-1 inline-block"
+                >
                   Home
                 </Link>
               </li>
               <li>
                 <Link
                   href="/services"
-                  className="hover:text-primary transition-colors"
+                  className="hover:text-[#C92C5C] transition-colors text-gray-300 hover:translate-x-1 inline-block"
                 >
                   Services
                 </Link>
@@ -64,7 +69,7 @@ export default function Footer() {
               <li>
                 <Link
                   href="/about"
-                  className="hover:text-primary transition-colors"
+                  className="hover:text-[#C92C5C] transition-colors text-gray-300 hover:translate-x-1 inline-block"
                 >
                   About Us
                 </Link>
@@ -72,7 +77,7 @@ export default function Footer() {
               <li>
                 <Link
                   href="/my-bookings"
-                  className="hover:text-primary transition-colors"
+                  className="hover:text-[#C92C5C] transition-colors text-gray-300 hover:translate-x-1 inline-block"
                 >
                   My Bookings
                 </Link>
@@ -82,12 +87,14 @@ export default function Footer() {
 
           {/* Services */}
           <div className="text-left">
-            <h4 className="font-semibold mb-3">Our Services</h4>
-            <ul className="space-y-2">
+            <h4 className="font-semibold mb-4 text-[#C92C5C] uppercase tracking-wide text-sm">
+              Our Services
+            </h4>
+            <ul className="space-y-2.5">
               <li>
                 <Link
                   href="/service/baby-care"
-                  className="hover:text-primary transition-colors"
+                  className="hover:text-[#C92C5C] transition-colors text-gray-300 hover:translate-x-1 inline-block"
                 >
                   Baby Care
                 </Link>
@@ -95,7 +102,7 @@ export default function Footer() {
               <li>
                 <Link
                   href="/service/elderly-care"
-                  className="hover:text-primary transition-colors"
+                  className="hover:text-[#C92C5C] transition-colors text-gray-300 hover:translate-x-1 inline-block"
                 >
                   Elderly Care
                 </Link>
@@ -103,7 +110,7 @@ export default function Footer() {
               <li>
                 <Link
                   href="/service/sick-care"
-                  className="hover:text-primary transition-colors"
+                  className="hover:text-[#C92C5C] transition-colors text-gray-300 hover:translate-x-1 inline-block"
                 >
                   Sick Care
                 </Link>
@@ -113,34 +120,36 @@ export default function Footer() {
 
           {/* Contact */}
           <div className="text-left">
-            <h4 className="font-semibold mb-3">Contact Us</h4>
-            <ul className="space-y-2">
-              <li className="flex items-center gap-2">
-                <FiMail />
+            <h4 className="font-semibold mb-4 text-[#C92C5C] uppercase tracking-wide text-sm">
+              Contact Us
+            </h4>
+            <ul className="space-y-2.5">
+              <li className="flex items-center gap-2 text-gray-300">
+                <FiMail className="text-[#C92C5C]" />
                 <a
                   href="mailto:info@care.xyz"
-                  className="hover:text-primary transition-colors"
+                  className="hover:text-[#C92C5C] transition-colors"
                 >
                   info@care.xyz
                 </a>
               </li>
-              <li className="flex items-center gap-2">
-                <FiPhone />
+              <li className="flex items-center gap-2 text-gray-300">
+                <FiPhone className="text-[#C92C5C]" />
                 <span>+880 1234-567890</span>
               </li>
-              <li className="flex items-center gap-2">
-                <FiMapPin />
+              <li className="flex items-center gap-2 text-gray-300">
+                <FiMapPin className="text-[#C92C5C]" />
                 <span>Dhaka, Bangladesh</span>
               </li>
             </ul>
 
             {/* Social Media */}
-            <div className="flex gap-4 mt-4">
+            <div className="flex gap-3 mt-5">
               <a
                 href="https://facebook.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-10 h-10 rounded-full bg-gray-700 dark:bg-gray-600 hover:bg-primary dark:hover:bg-primary flex items-center justify-center transition-colors"
+                className="w-10 h-10 rounded-full bg-gray-700/50 hover:bg-[#C92C5C] dark:bg-gray-600 dark:hover:bg-[#C92C5C] flex items-center justify-center transition-all hover:scale-110"
                 aria-label="Facebook"
               >
                 <FiFacebook size={20} className="text-white" />
@@ -149,7 +158,7 @@ export default function Footer() {
                 href="https://twitter.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-10 h-10 rounded-full bg-gray-700 dark:bg-gray-600 hover:bg-primary dark:hover:bg-primary flex items-center justify-center transition-colors"
+                className="w-10 h-10 rounded-full bg-gray-700/50 hover:bg-[#C92C5C] dark:bg-gray-600 dark:hover:bg-[#C92C5C] flex items-center justify-center transition-all hover:scale-110"
                 aria-label="Twitter"
               >
                 <FiTwitter size={20} className="text-white" />
@@ -158,7 +167,7 @@ export default function Footer() {
                 href="https://instagram.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-10 h-10 rounded-full bg-gray-700 dark:bg-gray-600 hover:bg-primary dark:hover:bg-primary flex items-center justify-center transition-colors"
+                className="w-10 h-10 rounded-full bg-gray-700/50 hover:bg-[#C92C5C] dark:bg-gray-600 dark:hover:bg-[#C92C5C] flex items-center justify-center transition-all hover:scale-110"
                 aria-label="Instagram"
               >
                 <FiInstagram size={20} className="text-white" />

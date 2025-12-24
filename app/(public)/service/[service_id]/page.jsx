@@ -23,7 +23,8 @@ import { FiCheckCircle, FiClock, FiDollarSign } from "react-icons/fi"
 
 // Generate metadata for SEO
 export async function generateMetadata({ params }) {
-  const service = servicesData.find((s) => s.service_id === params.service_id)
+  const { service_id } = await params
+  const service = servicesData.find((s) => s.service_id === service_id)
 
   if (!service) {
     return {
@@ -42,11 +43,10 @@ export async function generateMetadata({ params }) {
 }
 
 export default async function ServiceDetailPage({ params }) {
-  // Get session
   const session = await auth()
+  const { service_id } = await params
 
-  // Find the service
-  const service = servicesData.find((s) => s.service_id === params.service_id)
+  const service = servicesData.find((s) => s.service_id === service_id)
 
   // If service not found, show 404
   if (!service) {
@@ -69,7 +69,9 @@ export default async function ServiceDetailPage({ params }) {
 
         {/* Service Info */}
         <div>
-          <div className="badge badge-primary mb-4">{service.category}</div>
+          <div className="badge bg-[#C92C5C] text-white border-0 mb-4">
+            {service.category}
+          </div>
           <h1 className="text-4xl font-bold mb-4">{service.name}</h1>
           <p className="text-lg opacity-80 mb-6">{service.shortDescription}</p>
 
@@ -82,13 +84,13 @@ export default async function ServiceDetailPage({ params }) {
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <p className="text-sm opacity-70">Hourly Rate</p>
-                  <p className="text-2xl font-bold text-primary">
+                  <p className="text-2xl font-bold text-[#C92C5C]">
                     {formatPrice(service.chargePerHour)}
                   </p>
                 </div>
                 <div>
                   <p className="text-sm opacity-70">Daily Rate</p>
-                  <p className="text-2xl font-bold text-primary">
+                  <p className="text-2xl font-bold text-[#C92C5C]">
                     {formatPrice(service.chargePerDay)}
                   </p>
                 </div>
@@ -100,14 +102,14 @@ export default async function ServiceDetailPage({ params }) {
           {session ? (
             <Link
               href={`/booking/${service.service_id}`}
-              className="btn btn-primary btn-lg w-full gap-2"
+              className="btn bg-[#C92C5C] hover:bg-[#A82349] text-white border-0 btn-lg w-full gap-2 shadow-md hover:shadow-lg"
             >
               <FiClock /> Book This Service
             </Link>
           ) : (
             <Link
               href={`/login?callbackUrl=/booking/${service.service_id}`}
-              className="btn btn-primary btn-lg w-full gap-2"
+              className="btn bg-[#C92C5C] hover:bg-[#A82349] text-white border-0 btn-lg w-full gap-2 shadow-md hover:shadow-lg"
             >
               Login to Book Service
             </Link>
@@ -133,7 +135,7 @@ export default async function ServiceDetailPage({ params }) {
               className="flex items-start gap-3 p-4 bg-base-200 rounded-lg"
             >
               <FiCheckCircle
-                className="text-primary mt-1 flex-shrink-0"
+                className="text-[#C92C5C] mt-1 flex-shrink-0"
                 size={20}
               />
               <span>{feature}</span>
@@ -143,7 +145,7 @@ export default async function ServiceDetailPage({ params }) {
       </div>
 
       {/* Call to Action */}
-      <div className="text-center mt-16 p-8 bg-primary text-primary-content rounded-lg max-w-4xl mx-auto">
+      <div className="text-center mt-16 p-8 bg-[#C92C5C] text-white rounded-lg max-w-4xl mx-auto shadow-xl">
         <h3 className="text-2xl font-bold mb-4">Ready to Book?</h3>
         <p className="mb-6">
           Get started today and provide your loved ones with the care they
@@ -152,14 +154,14 @@ export default async function ServiceDetailPage({ params }) {
         {session ? (
           <Link
             href={`/booking/${service.service_id}`}
-            className="btn btn-secondary btn-lg"
+            className="btn bg-white text-[#C92C5C] hover:bg-gray-100 border-0 btn-lg shadow-md hover:shadow-lg"
           >
             Book Now
           </Link>
         ) : (
           <Link
             href={`/login?callbackUrl=/booking/${service.service_id}`}
-            className="btn btn-secondary btn-lg"
+            className="btn bg-white text-[#C92C5C] hover:bg-gray-100 border-0 btn-lg shadow-md hover:shadow-lg"
           >
             Login to Book
           </Link>

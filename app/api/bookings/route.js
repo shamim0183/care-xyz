@@ -10,9 +10,10 @@
  */
 
 import { auth } from "@/lib/auth"
+import { sendBookingConfirmationEmail } from "@/lib/email"
 import connectDB from "@/lib/mongodb"
 import Booking from "@/models/Booking"
-import Service from "@/models/Service"
+import User from "@/models/User"
 import { NextResponse } from "next/server"
 
 /**
@@ -20,8 +21,11 @@ import { NextResponse } from "next/server"
  */
 export async function POST(req) {
   try {
+    console.log("=== BOOKING API START ===")
+
     // Check authentication
     const session = await auth()
+    console.log("Session:", session ? "Authenticated" : "Not authenticated")
     if (!session) {
       return NextResponse.json(
         { error: "Unauthorized. Please login." },
@@ -30,10 +34,18 @@ export async function POST(req) {
     }
 
     // Parse request body
-    const { serviceId, duration, location, totalCost } = await req.json()
+    const body = await req.json()
+    console.log("Request body:", JSON.stringify(body, null, 2))
+    const { serviceId, duration, location, totalCost } = body
 
     // Validate required fields
     if (!serviceId || !duration || !location || !totalCost) {
+      console.log("Missing fields:", {
+        serviceId,
+        duration,
+        location,
+        totalCost,
+      })
       return NextResponse.json(
         { error: "Missing required fields" },
         { status: 400 }
@@ -41,18 +53,52 @@ export async function POST(req) {
     }
 
     // Connect to database
+    console.log("Connecting to database...")
     await connectDB()
+    console.log("Database connected")
 
-    // Get service details
-    const service = await Service.findById(serviceId)
+    // Get service details from JSON file (services are not in database)
+    console.log("Importing services.json...")
+    const servicesData = (await import("@/data/services.json")).default
+    console.log("Services imported, total:", servicesData.length)
+
+    const service = servicesData.find((s) => s.service_id === serviceId)
+    console.log("Service found:", service ? service.name : "NOT FOUND")
+
     if (!service) {
       return NextResponse.json({ error: "Service not found" }, { status: 404 })
     }
 
-    // Create booking
-    const booking = await Booking.create({
+    // Check for duplicate booking - same service on the same day
+    const today = new Date()
+    today.setHours(0, 0, 0, 0)
+    const tomorrow = new Date(today)
+    tomorrow.setDate(tomorrow.getDate() + 1)
+
+    const existingBooking = await Booking.findOne({
       userId: session.user.id,
-      serviceId: service._id,
+      serviceId: service.service_id,
+      createdAt: {
+        $gte: today,
+        $lt: tomorrow,
+      },
+      status: { $ne: "Cancelled" },
+    })
+
+    if (existingBooking) {
+      return NextResponse.json(
+        {
+          error:
+            "You already have a booking for this service today. Please try again tomorrow or cancel your existing booking.",
+        },
+        { status: 400 }
+      )
+    }
+
+    // Create booking
+    console.log("Creating booking with data:", {
+      userId: session.user.id,
+      serviceId: service.service_id,
       serviceName: service.name,
       duration,
       location,
@@ -61,8 +107,42 @@ export async function POST(req) {
       paymentStatus: "Unpaid",
     })
 
-    // TODO: Send email invoice here
-    // await sendBookingEmail(booking);
+    const booking = await Booking.create({
+      userId: session.user.id,
+      serviceId: service.service_id,
+      serviceName: service.name,
+      duration,
+      location,
+      totalCost,
+      status: "Pending",
+      paymentStatus: "Unpaid",
+    })
+    console.log("Booking created successfully:", booking._id)
+
+    // Send email invoice to user
+    try {
+      console.log("Attempting to send email...")
+      const user = await User.findById(session.user.id)
+      if (user && user.email) {
+        await sendBookingConfirmationEmail({
+          to: user.email,
+          userName: user.name,
+          bookingDetails: {
+            serviceName: booking.serviceName,
+            duration: booking.duration,
+            location: booking.location,
+            totalCost: booking.totalCost,
+            bookingId: booking._id.toString(),
+            status: booking.status,
+            createdAt: booking.createdAt,
+          },
+        })
+        console.log("Email sent successfully")
+      }
+    } catch (emailError) {
+      // Log email error but don't fail the booking
+      console.error("Email send failed:", emailError)
+    }
 
     return NextResponse.json(
       {
@@ -78,9 +158,12 @@ export async function POST(req) {
       { status: 201 }
     )
   } catch (error) {
-    console.error("Booking creation error:", error)
+    console.error("=== BOOKING ERROR ===")
+    console.error("Error name:", error.name)
+    console.error("Error message:", error.message)
+    console.error("Error stack:", error.stack)
     return NextResponse.json(
-      { error: "Failed to create booking" },
+      { error: "Failed to create booking", details: error.message },
       { status: 500 }
     )
   }

@@ -56,13 +56,15 @@ const UserSchema = new mongoose.Schema(
       enum: ["user", "admin"],
       default: "user",
     },
+    profileImage: {
+      type: String,
+      default: null,
+    },
   },
   {
     timestamps: true,
   }
 )
-
-UserSchema.index({ email: 1 })
 
 // Prevent OverwriteModelError during hot reload
 export default mongoose.models.User || mongoose.model("User", UserSchema)
