@@ -10,15 +10,20 @@ export default function ThemeToggle() {
   // Only run on client side
   useEffect(() => {
     const savedTheme = localStorage.getItem("theme") || "light"
-    setTheme(savedTheme)
+
+    // Apply theme to DOM immediately (no React state involved)
     document.documentElement.setAttribute("data-theme", savedTheme)
     if (savedTheme === "dark") {
       document.documentElement.classList.add("dark")
     } else {
       document.documentElement.classList.remove("dark")
     }
-    // Use queueMicrotask to avoid synchronous setState warning
-    queueMicrotask(() => setMounted(true))
+
+    // Defer all React state updates to avoid synchronous setState
+    queueMicrotask(() => {
+      setTheme(savedTheme)
+      setMounted(true)
+    })
   }, [])
 
   const toggleTheme = () => {

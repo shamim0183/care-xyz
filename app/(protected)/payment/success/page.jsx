@@ -23,14 +23,32 @@ export default function PaymentSuccessPage() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    if (bookingId) {
-      fetch(`/api/bookings/${bookingId}`)
-        .then((res) => res.json())
-        .then((data) => setBooking(data.booking))
-        .catch(console.error)
-        .finally(() => setLoading(false))
+    const verifyAndUpdatePayment = async () => {
+      if (sessionId && bookingId) {
+        try {
+          // Verify payment and update booking status
+          const response = await fetch("/api/payment/verify", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ sessionId, bookingId }),
+          })
+
+          if (response.ok) {
+            // Payment verified, fetch updated booking
+            const bookingResponse = await fetch(`/api/bookings/${bookingId}`)
+            const data = await bookingResponse.json()
+            setBooking(data.booking)
+          }
+        } catch (error) {
+          console.error("Payment verification error:", error)
+        } finally {
+          setLoading(false)
+        }
+      }
     }
-  }, [bookingId])
+
+    verifyAndUpdatePayment()
+  }, [bookingId, sessionId])
 
   if (loading) {
     return (
