@@ -1,26 +1,25 @@
 /**
  * Admin Dashboard - Bookings Management
  *
- * Protected admin page showing all bookings across all users.
- * Allows admin to view, update statuses, and manage bookings.
- *
- * Route: /admin/bookings
+ * Professional admin interface with real-time updates
  */
 
 "use client"
 
-import { formatDate, formatPrice, getStatusColor } from "@/lib/utils"
+import { formatDate, formatPrice } from "@/lib/utils"
 import axios from "axios"
 import { useSession } from "next-auth/react"
 import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
 import toast, { Toaster } from "react-hot-toast"
 import {
+  FiAlertCircle,
   FiCalendar,
   FiCheckCircle,
   FiClock,
   FiDollarSign,
   FiMapPin,
+  FiRefreshCw,
   FiUser,
 } from "react-icons/fi"
 
@@ -30,9 +29,9 @@ export default function AdminBookingsPage() {
   const [bookings, setBookings] = useState([])
   const [loading, setLoading] = useState(true)
   const [filter, setFilter] = useState("all")
+  const [refreshing, setRefreshing] = useState(false)
 
   useEffect(() => {
-    // Check if user is admin
     if (session && session.user.role !== "admin") {
       router.push("/")
       toast.error("Unauthorized access")
@@ -46,6 +45,7 @@ export default function AdminBookingsPage() {
 
   const fetchBookings = async () => {
     try {
+      setRefreshing(true)
       const { data } = await axios.get("/api/admin/bookings")
       setBookings(data.bookings)
     } catch (error) {
@@ -53,6 +53,7 @@ export default function AdminBookingsPage() {
       toast.error(error.response?.data?.error || "Error loading bookings")
     } finally {
       setLoading(false)
+      setRefreshing(false)
     }
   }
 
@@ -94,242 +95,282 @@ export default function AdminBookingsPage() {
 
   if (loading) {
     return (
-      <div className="container mx-auto px-4 py-12">
-        <div className="flex justify-center">
-          <span className="loading loading-spinner loading-lg"></span>
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
+        <div className="text-center">
+          <span className="loading loading-spinner loading-lg text-[#C92C5C]"></span>
+          <p className="mt-4 text-gray-600 dark:text-gray-400">
+            Loading dashboard...
+          </p>
         </div>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-[#FFF0F3] dark:bg-gray-900 py-12">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-8">
       <div className="container mx-auto px-4">
         <Toaster position="top-center" />
 
         {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl md:text-4xl font-bold font-serif mb-2 text-gray-900 dark:text-white">
-            Admin Dashboard
-          </h1>
-          <p className="opacity-70">Manage all bookings and payments</p>
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
+          <div>
+            <h1 className="text-3xl md:text-4xl font-bold font-serif text-gray-900 dark:text-white mb-2">
+              Admin Dashboard
+            </h1>
+            <p className="text-gray-600 dark:text-gray-400">
+              Manage all bookings and payments
+            </p>
+          </div>
+          <button
+            onClick={fetchBookings}
+            disabled={refreshing}
+            className="bg-[#C92C5C] hover:bg-[#A82349] text-white font-semibold py-3 px-6 rounded-lg inline-flex items-center gap-2 transition-all shadow-md hover:shadow-lg disabled:opacity-50"
+          >
+            <FiRefreshCw className={refreshing ? "animate-spin" : ""} />
+            Refresh
+          </button>
         </div>
 
         {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-8">
-          <div className="card bg-white dark:bg-gray-800 shadow-lg">
-            <div className="card-body p-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-xs opacity-70">Total Bookings</p>
-                  <p className="text-2xl font-bold text-gray-900 dark:text-white">
-                    {stats.total}
-                  </p>
-                </div>
-                <FiClock className="text-[#C92C5C]" size={24} />
-              </div>
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-8">
+          {/* Total Bookings */}
+          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-5 border-l-4 border-[#C92C5C]">
+            <div className="flex items-center justify-between mb-2">
+              <FiClock className="text-[#C92C5C]" size={24} />
             </div>
+            <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">
+              Total Bookings
+            </p>
+            <p className="text-3xl font-bold text-gray-900 dark:text-white">
+              {stats.total}
+            </p>
           </div>
 
-          <div className="card bg-base-100 shadow">
-            <div className="card-body p-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-xs opacity-70">Pending</p>
-                  <p className="text-2xl font-bold text-warning">
-                    {stats.pending}
-                  </p>
-                </div>
-                <FiClock className="text-warning" size={24} />
-              </div>
+          {/* Pending */}
+          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-5 border-l-4 border-orange-500">
+            <div className="flex items-center justify-between mb-2">
+              <FiAlertCircle className="text-orange-500" size={24} />
             </div>
+            <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">
+              Pending
+            </p>
+            <p className="text-3xl font-bold text-orange-500">
+              {stats.pending}
+            </p>
           </div>
 
-          <div className="card bg-base-100 shadow">
-            <div className="card-body p-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-xs opacity-70">Confirmed</p>
-                  <p className="text-2xl font-bold text-info">
-                    {stats.confirmed}
-                  </p>
-                </div>
-                <FiCheckCircle className="text-info" size={24} />
-              </div>
+          {/* Confirmed */}
+          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-5 border-l-4 border-blue-500">
+            <div className="flex items-center justify-between mb-2">
+              <FiCheckCircle className="text-blue-500" size={24} />
             </div>
+            <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">
+              Confirmed
+            </p>
+            <p className="text-3xl font-bold text-blue-500">
+              {stats.confirmed}
+            </p>
           </div>
 
-          <div className="card bg-base-100 shadow">
-            <div className="card-body p-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-xs opacity-70">Completed</p>
-                  <p className="text-2xl font-bold text-success">
-                    {stats.completed}
-                  </p>
-                </div>
-                <FiCheckCircle className="text-success" size={24} />
-              </div>
+          {/* Completed */}
+          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-5 border-l-4 border-green-500">
+            <div className="flex items-center justify-between mb-2">
+              <FiCheckCircle className="text-green-500" size={24} />
             </div>
+            <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">
+              Completed
+            </p>
+            <p className="text-3xl font-bold text-green-500">
+              {stats.completed}
+            </p>
           </div>
 
-          <div className="card bg-base-100 shadow">
-            <div className="card-body p-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-xs opacity-70">Paid</p>
-                  <p className="text-2xl font-bold text-success">
-                    {stats.paid}
-                  </p>
-                </div>
-                <FiDollarSign className="text-success" size={24} />
-              </div>
+          {/* Paid */}
+          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-5 border-l-4 border-emerald-500">
+            <div className="flex items-center justify-between mb-2">
+              <FiDollarSign className="text-emerald-500" size={24} />
             </div>
+            <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">
+              Paid
+            </p>
+            <p className="text-3xl font-bold text-emerald-500">{stats.paid}</p>
           </div>
 
-          <div className="card bg-white dark:bg-gray-800 shadow-lg">
-            <div className="card-body p-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-xs opacity-70">Revenue</p>
-                  <p className="text-xl font-bold text-[#C92C5C]">
-                    {formatPrice(stats.revenue)}
-                  </p>
-                </div>
-                <FiDollarSign className="text-[#C92C5C]" size={24} />
-              </div>
+          {/* Revenue */}
+          <div className="bg-gradient-to-r from-[#C92C5C] to-[#A82349] rounded-xl shadow-md p-5">
+            <div className="flex items-center justify-between mb-2">
+              <FiDollarSign className="text-white" size={24} />
             </div>
+            <p className="text-sm text-white/80 mb-1">Total Revenue</p>
+            <p className="text-2xl font-bold text-white">
+              {formatPrice(stats.revenue)}
+            </p>
           </div>
         </div>
 
         {/* Filters */}
-        <div className="flex flex-wrap gap-2 mb-6">
-          <button
-            onClick={() => setFilter("all")}
-            className={`px-4 py-2 rounded-lg font-medium text-sm transition-all ${
-              filter === "all"
-                ? "bg-[#C92C5C] text-white shadow-md"
-                : "bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 hover:border-[#C92C5C]"
-            }`}
-          >
-            All
-          </button>
-          <button
-            onClick={() => setFilter("Pending")}
-            className={`btn btn-sm ${
-              filter === "Pending" ? "btn-warning" : "btn-outline"
-            }`}
-          >
-            Pending
-          </button>
-          <button
-            onClick={() => setFilter("Confirmed")}
-            className={`btn btn-sm ${
-              filter === "Confirmed" ? "btn-info" : "btn-outline"
-            }`}
-          >
-            Confirmed
-          </button>
-          <button
-            onClick={() => setFilter("Completed")}
-            className={`btn btn-sm ${
-              filter === "Completed" ? "btn-success" : "btn-outline"
-            }`}
-          >
-            Completed
-          </button>
-          <button
-            onClick={() => setFilter("paid")}
-            className={`btn btn-sm ${
-              filter === "paid" ? "btn-success" : "btn-outline"
-            }`}
-          >
-            Paid
-          </button>
-          <button
-            onClick={() => setFilter("unpaid")}
-            className={`btn btn-sm ${
-              filter === "unpaid" ? "btn-error" : "btn-outline"
-            }`}
-          >
-            Unpaid
-          </button>
+        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-4 mb-6">
+          <div className="flex flex-wrap gap-2">
+            <button
+              onClick={() => setFilter("all")}
+              className={`px-5 py-2.5 rounded-lg font-semibold text-sm transition-all ${
+                filter === "all"
+                  ? "bg-[#C92C5C] text-white shadow-md"
+                  : "bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600"
+              }`}
+            >
+              All ({bookings.length})
+            </button>
+            <button
+              onClick={() => setFilter("Pending")}
+              className={`px-5 py-2.5 rounded-lg font-semibold text-sm transition-all ${
+                filter === "Pending"
+                  ? "bg-orange-500 text-white shadow-md"
+                  : "bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600"
+              }`}
+            >
+              Pending ({stats.pending})
+            </button>
+            <button
+              onClick={() => setFilter("Confirmed")}
+              className={`px-5 py-2.5 rounded-lg font-semibold text-sm transition-all ${
+                filter === "Confirmed"
+                  ? "bg-blue-500 text-white shadow-md"
+                  : "bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600"
+              }`}
+            >
+              Confirmed ({stats.confirmed})
+            </button>
+            <button
+              onClick={() => setFilter("Completed")}
+              className={`px-5 py-2.5 rounded-lg font-semibold text-sm transition-all ${
+                filter === "Completed"
+                  ? "bg-green-500 text-white shadow-md"
+                  : "bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600"
+              }`}
+            >
+              Completed ({stats.completed})
+            </button>
+            <button
+              onClick={() => setFilter("paid")}
+              className={`px-5 py-2.5 rounded-lg font-semibold text-sm transition-all ${
+                filter === "paid"
+                  ? "bg-emerald-500 text-white shadow-md"
+                  : "bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600"
+              }`}
+            >
+              Paid ({stats.paid})
+            </button>
+            <button
+              onClick={() => setFilter("unpaid")}
+              className={`px-5 py-2.5 rounded-lg font-semibold text-sm transition-all ${
+                filter === "unpaid"
+                  ? "bg-red-500 text-white shadow-md"
+                  : "bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600"
+              }`}
+            >
+              Unpaid (
+              {bookings.filter((b) => b.paymentStatus === "Unpaid").length})
+            </button>
+          </div>
         </div>
 
         {/* Bookings List */}
         <div className="space-y-4">
           {filteredBookings.length === 0 ? (
-            <div className="card bg-base-100 shadow">
-              <div className="card-body text-center py-12">
-                <p className="opacity-70">No bookings found</p>
-              </div>
+            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-12 text-center">
+              <FiAlertCircle className="mx-auto text-gray-400 mb-4" size={48} />
+              <p className="text-gray-600 dark:text-gray-400 text-lg">
+                No bookings found
+              </p>
             </div>
           ) : (
             filteredBookings.map((booking) => (
               <div
                 key={booking._id}
-                className="card bg-white dark:bg-gray-800 shadow-lg hover:shadow-xl transition-shadow"
+                className="bg-white dark:bg-gray-800 rounded-xl shadow-md hover:shadow-lg transition-shadow border border-gray-200 dark:border-gray-700"
               >
-                <div className="card-body">
-                  <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
-                    {/* Booking Info */}
-                    <div className="lg:col-span-2">
-                      <h3 className="font-bold text-lg mb-2">
+                <div className="p-6">
+                  <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                    {/* Booking Info - 5 columns */}
+                    <div className="lg:col-span-5">
+                      <h3 className="font-bold text-xl mb-3 text-gray-900 dark:text-white">
                         {booking.serviceName}
                       </h3>
-                      <div className="space-y-1 text-sm opacity-70">
-                        <div className="flex items-center gap-2">
-                          <FiUser />
-                          <span>
-                            {booking.userId?.name || "Unknown"} (
-                            {booking.userId?.email || "No email"})
+                      <div className="space-y-2 text-sm">
+                        <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400">
+                          <FiUser className="flex-shrink-0" />
+                          <span className="truncate">
+                            <strong>{booking.userId?.name || "Unknown"}</strong>
+                            <br />
+                            <span className="text-xs">
+                              {booking.userId?.email || "No email"}
+                            </span>
                           </span>
                         </div>
-                        <div className="flex items-center gap-2">
-                          <FiCalendar />
+                        <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400">
+                          <FiCalendar className="flex-shrink-0" />
                           <span>
                             {booking.duration.value} {booking.duration.unit}
                           </span>
                         </div>
-                        <div className="flex items-center gap-2">
-                          <FiMapPin />
+                        <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400">
+                          <FiMapPin className="flex-shrink-0" />
                           <span>
                             {booking.location.city}, {booking.location.area}
                           </span>
                         </div>
-                        <div className="flex items-center gap-2">
-                          <FiClock />
-                          <span>Booked on {formatDate(booking.createdAt)}</span>
+                        <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400">
+                          <FiClock className="flex-shrink-0" />
+                          <span>Booked: {formatDate(booking.createdAt)}</span>
                         </div>
+                        {booking.paidAt && (
+                          <div className="flex items-center gap-2 text-emerald-600 dark:text-emerald-400">
+                            <FiCheckCircle className="flex-shrink-0" />
+                            <span>Paid: {formatDate(booking.paidAt)}</span>
+                          </div>
+                        )}
                       </div>
                     </div>
 
-                    {/* Payment Info */}
-                    <div>
-                      <p className="text-sm opacity-70 mb-1">Payment</p>
-                      <p className="text-xl font-bold text-primary mb-2">
+                    {/* Payment Info - 3 columns */}
+                    <div className="lg:col-span-3 flex flex-col justify-center border-l border-gray-200 dark:border-gray-700 pl-6">
+                      <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
+                        Payment Status
+                      </p>
+                      <p className="text-3xl font-bold text-[#C92C5C] mb-3">
                         {formatPrice(booking.totalCost)}
                       </p>
                       <span
-                        className={`badge ${
+                        className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold ${
                           booking.paymentStatus === "Paid"
-                            ? "badge-success"
-                            : "badge-error"
+                            ? "bg-emerald-100 text-emerald-800 dark:bg-emerald-900 dark:text-emerald-200"
+                            : "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200"
                         }`}
                       >
-                        {booking.paymentStatus}
+                        {booking.paymentStatus === "Paid" ? (
+                          <>
+                            <FiCheckCircle className="mr-1" /> Paid
+                          </>
+                        ) : (
+                          <>
+                            <FiAlertCircle className="mr-1" /> Unpaid
+                          </>
+                        )}
                       </span>
                     </div>
 
-                    {/* Status & Actions */}
-                    <div>
-                      <p className="text-sm opacity-70 mb-2">Status</p>
+                    {/* Status & Actions - 4 columns */}
+                    <div className="lg:col-span-4 flex flex-col justify-center border-l border-gray-200 dark:border-gray-700 pl-6">
+                      <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
+                        Booking Status
+                      </p>
                       <select
                         value={booking.status}
                         onChange={(e) =>
                           updateBookingStatus(booking._id, e.target.value)
                         }
-                        className="select select-bordered select-sm w-full mb-2"
+                        className="w-full px-4 py-2 border-2 border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white font-semibold focus:border-[#C92C5C] focus:outline-none transition-colors mb-3"
                       >
                         <option value="Pending">Pending</option>
                         <option value="Confirmed">Confirmed</option>
@@ -337,7 +378,15 @@ export default function AdminBookingsPage() {
                         <option value="Cancelled">Cancelled</option>
                       </select>
                       <span
-                        className={`badge ${getStatusColor(booking.status)}`}
+                        className={`inline-flex items-center justify-center px-3 py-2 rounded-lg text-sm font-bold ${
+                          booking.status === "Pending"
+                            ? "bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200"
+                            : booking.status === "Confirmed"
+                            ? "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200"
+                            : booking.status === "Completed"
+                            ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200"
+                            : "bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200"
+                        }`}
                       >
                         {booking.status}
                       </span>
