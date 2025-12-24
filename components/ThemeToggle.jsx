@@ -1,10 +1,3 @@
-/**
- * Theme Toggle Component
- *
- * Allows users to switch between light and dark themes.
- * Uses DaisyUI theme system with localStorage persistence.
- */
-
 "use client"
 
 import { useEffect, useState } from "react"
@@ -14,6 +7,7 @@ export default function ThemeToggle() {
   const [theme, setTheme] = useState("light")
   const [mounted, setMounted] = useState(false)
 
+  // Only run on client side
   useEffect(() => {
     const savedTheme = localStorage.getItem("theme") || "light"
     setTheme(savedTheme)
@@ -23,18 +17,10 @@ export default function ThemeToggle() {
     } else {
       document.documentElement.classList.remove("dark")
     }
-    setMounted(true)
+    // Mark as mounted AFTER setting theme
+    setTimeout(() => setMounted(true), 0)
   }, [])
 
-  /**
-   * Toggle Theme Handler
-   *
-   * Switches between light and dark themes and updates:
-   * 1. Component state
-   * 2. localStorage (for persistence)
-   * 3. HTML data-theme attribute (for DaisyUI)
-   * 4. HTML dark class (for Tailwind)
-   */
   const toggleTheme = () => {
     const newTheme = theme === "light" ? "dark" : "light"
     setTheme(newTheme)
