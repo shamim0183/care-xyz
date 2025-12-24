@@ -1,6 +1,6 @@
 /**
  * Receipt Page
- * 
+ *
  * Professional printable invoice for paid bookings
  */
 
@@ -11,7 +11,7 @@ import { useSearchParams } from "next/navigation"
 import { useEffect, useState } from "react"
 import { FiCheckCircle, FiPrinter } from "react-icons/fi"
 
-export default function ReceiptPage() {
+function ReceiptContent() {
   const searchParams = useSearchParams()
   const bookingId = searchParams.get("id")
   const [booking, setBooking] = useState(null)
@@ -72,7 +72,9 @@ export default function ReceiptPage() {
                   <h1 className="text-3xl font-bold font-serif mb-2">
                     Care.xyz
                   </h1>
-                  <p className="text-white/90">Professional Caregiving Services</p>
+                  <p className="text-white/90">
+                    Professional Caregiving Services
+                  </p>
                 </div>
                 <div className="text-right">
                   <div className="flex items-center gap-2 justify-end mb-2">
