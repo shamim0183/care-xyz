@@ -137,7 +137,7 @@ export default function PaymentSuccessPage() {
                       </div>
                       <div>
                         <p className="font-semibold text-blue-900 dark:text-blue-100 mb-2">
-                          What's Next?
+                          What&apos;s Next?
                         </p>
                         <p className="text-sm text-blue-800 dark:text-blue-200">
                           You will receive a confirmation email shortly. Our
