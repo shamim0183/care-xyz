@@ -152,8 +152,8 @@ export default function ProfilePage() {
                   <div className="flex justify-center my-6">
                     <div className="relative">
                       <div className="w-32 h-32 rounded-full overflow-hidden shadow-md border-4 border-white ring-2 ring-[#C92C5C]/20">
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
                         {imagePreview ? (
+                          /* eslint-disable-next-line @next/next/no-img-element */
                           <img
                             src={imagePreview}
                             alt="Profile"

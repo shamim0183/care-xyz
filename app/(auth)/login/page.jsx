@@ -9,7 +9,7 @@
 import { signIn } from "next-auth/react"
 import Link from "next/link"
 import { useRouter, useSearchParams } from "next/navigation"
-import { useState } from "react"
+import { Suspense, useState } from "react"
 import toast, { Toaster } from "react-hot-toast"
 import { FcGoogle } from "react-icons/fc"
 import { FiLock, FiMail } from "react-icons/fi"
