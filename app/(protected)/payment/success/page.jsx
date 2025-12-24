@@ -15,7 +15,7 @@ import { useSearchParams } from "next/navigation"
 import { useEffect, useState } from "react"
 import { FiCheckCircle, FiHome } from "react-icons/fi"
 
-export default function PaymentSuccessPage() {
+function PaymentSuccessContent() {
   const searchParams = useSearchParams()
   const sessionId = searchParams.get("session_id")
   const bookingId = searchParams.get("booking_id")
@@ -171,5 +171,19 @@ export default function PaymentSuccessPage() {
         </div>
       </div>
     </div>
+  )
+}
+
+export default function PaymentSuccessPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen flex items-center justify-center">
+          <span className="loading loading-spinner loading-lg"></span>
+        </div>
+      }
+    >
+      <PaymentSuccessContent />
+    </Suspense>
   )
 }
