@@ -47,7 +47,10 @@ function LoginForm() {
         toast.error("Invalid email or password")
       } else {
         toast.success("Login successful!")
-        router.push(callbackUrl)
+        // Small delay to allow toast to show before navigation
+        setTimeout(() => {
+          router.push(callbackUrl)
+        }, 500)
       }
     } catch (error) {
       console.error("Login error:", error)
