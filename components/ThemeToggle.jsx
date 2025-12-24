@@ -15,7 +15,6 @@ export default function ThemeToggle() {
   const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
-    setMounted(true)
     const savedTheme = localStorage.getItem("theme") || "light"
     setTheme(savedTheme)
     document.documentElement.setAttribute("data-theme", savedTheme)
@@ -24,6 +23,7 @@ export default function ThemeToggle() {
     } else {
       document.documentElement.classList.remove("dark")
     }
+    setMounted(true)
   }, [])
 
   /**
