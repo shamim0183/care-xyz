@@ -8,7 +8,7 @@
 
 import { formatDate, formatPrice } from "@/lib/utils"
 import { useSearchParams } from "next/navigation"
-import { useEffect, useState } from "react"
+import { Suspense, useEffect, useState } from "react"
 import { FiCheckCircle, FiPrinter } from "react-icons/fi"
 
 function ReceiptContent() {
@@ -207,5 +207,19 @@ function ReceiptContent() {
         }
       `}</style>
     </div>
+  )
+}
+
+export default function ReceiptPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen flex items-center justify-center">
+          <span className="loading loading-spinner loading-lg"></span>
+        </div>
+      }
+    >
+      <ReceiptContent />
+    </Suspense>
   )
 }
