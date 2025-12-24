@@ -1,0 +1,134 @@
+═══════════════════════════════════════════════════════════════════════════════
+                    EmailJS Setup Guide for Care.xyz
+═══════════════════════════════════════════════════════════════════════════════
+
+OVERVIEW
+--------
+This application now uses EmailJS instead of Resend for sending booking 
+confirmation emails to customers.
+
+EMAILJS CREDENTIALS (Already Configured)
+-----------------------------------------
+The following credentials have been added to .env.local:
+
+EMAILJS_SERVICE_ID=service_vtxjjam
+EMAILJS_PUBLIC_KEY=QBSX7SxwVllyU7qGH
+EMAILJS_PRIVATE_KEY=7NMjKRCZR81Vrv71i8trX
+
+REQUIRED: Create Email Template in EmailJS Dashboard
+-----------------------------------------------------
+
+STEP 1: Access EmailJS Dashboard
+  1. Go to https://dashboard.emailjs.com/
+  2. Log in with your account
+  3. Navigate to "Email Templates"
+
+STEP 2: Create a New Template
+  1. Click "Create New Template"
+  2. Set the Template ID to: template_booking
+  3. Set the Template Name to: Booking Confirmation
+
+STEP 3: Configure Template Content
+
+In the template editor, use the following structure:
+
+Subject Line:
+  {{subject}}
+
+Email Body (HTML):
+  {{{message_html}}}
+
+NOTE: Use triple curly braces {{{message_html}}} to render HTML without escaping.
+
+STEP 4: Save Template
+  1. Click "Save"
+  2. Verify the template ID is "template_booking"
+
+HOW IT WORKS
+------------
+When a customer makes a booking:
+  1. The booking is created in MongoDB
+  2. The sendBookingConfirmationEmail() function is called
+  3. EmailJS sends the email using:
+     - Service ID: service_vtxjjam
+     - Template ID: template_booking
+     - Your public and private keys for authentication
+  4. The customer receives a beautifully formatted booking confirmation email
+
+EMAIL TEMPLATE INCLUDES
+-----------------------
+- Header: Care.xyz logo and branding
+- Greeting: Personalized customer name
+- Invoice Box: All booking details
+  * Service name
+  * Duration
+  * Location details
+  * Address
+  * Booking date
+  * Booking ID
+  * Status badge
+  * Total cost
+- Next Steps: Information about what happens next
+- CTA Button: Link to view bookings
+- Footer: Contact information and copyright
+
+TESTING
+-------
+To test the email integration:
+  1. Start the development server: npm run dev
+  2. Create a test booking through the application
+  3. Check the server console for email sending logs
+  4. Verify the email was received
+  5. Check the EmailJS dashboard for email statistics
+
+TROUBLESHOOTING
+---------------
+
+Email Not Sending:
+  1. Verify all environment variables are set correctly
+  2. Check that the template ID matches: template_booking
+  3. Ensure the EmailJS service is active
+  4. Check EmailJS dashboard for error logs
+
+Template Variables Not Rendering:
+  1. Make sure you're using the correct syntax in the template
+  2. For HTML content, use {{{message_html}}} (triple braces)
+  3. For text variables, use {{variable_name}} (double braces)
+
+Authentication Errors:
+  1. Verify public and private keys are correct
+  2. Check that the service ID matches your EmailJS service
+  3. Ensure your EmailJS account is active and not over quota
+
+EMAILJS DASHBOARD LINKS
+-----------------------
+- Dashboard: https://dashboard.emailjs.com/
+- Email Templates: https://dashboard.emailjs.com/admin/templates
+- Email Services: https://dashboard.emailjs.com/admin
+- Email History: https://dashboard.emailjs.com/admin/history
+
+MIGRATION NOTES
+---------------
+Changed:
+  ✓ Removed resend package
+  ✓ Added @emailjs/nodejs package
+  ✓ Updated lib/email.js with EmailJS implementation
+  ✓ Updated environment variables
+
+Maintained:
+  ✓ Same function signature for compatibility
+  ✓ Same HTML email template design
+  ✓ Same booking confirmation flow
+  ✓ Error handling and logging
+
+NEXT STEPS
+----------
+Before deploying to production:
+  1. ✓ Install EmailJS package: npm install @emailjs/nodejs
+  2. ⚠ CREATE template_booking template in EmailJS dashboard (REQUIRED)
+  3. ✓ Update environment variables
+  4. ○ Test with a real booking
+  5. ○ Verify email delivery
+  6. ○ Check email in multiple email clients (Gmail, Outlook, etc.)
+
+═══════════════════════════════════════════════════════════════════════════════
