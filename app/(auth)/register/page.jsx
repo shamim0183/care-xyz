@@ -284,6 +284,7 @@ export default function RegisterPage() {
               {imagePreview && (
                 <div className="flex justify-center mb-4">
                   <div className="w-20 h-20 rounded-full overflow-hidden shadow-md border-4 border-white ring-2 ring-[#C92C5C]/20">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src={imagePreview}
                       alt="Profile preview"

@@ -125,7 +125,7 @@ export default function MyBookingsPage() {
               No bookings yet
             </h3>
             <p className="text-gray-600 dark:text-gray-400 mb-6">
-              You haven't made any bookings yet. Browse our services to get
+              You haven&apos;t made any bookings yet. Browse our services to get
               started!
             </p>
             <a
