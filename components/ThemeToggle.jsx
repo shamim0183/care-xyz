@@ -17,8 +17,8 @@ export default function ThemeToggle() {
     } else {
       document.documentElement.classList.remove("dark")
     }
-    // Mark as mounted AFTER setting theme
-    setTimeout(() => setMounted(true), 0)
+    // Use queueMicrotask to avoid synchronous setState warning
+    queueMicrotask(() => setMounted(true))
   }, [])
 
   const toggleTheme = () => {

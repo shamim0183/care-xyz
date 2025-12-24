@@ -1,35 +1,24 @@
-/**
- * My Bookings Page
- *
- * Protected page showing user's booking history.
- *
- * Features:
- * - Display all user bookings
- * - Status badges (Pending, Confirmed, Completed, Cancelled)
- * - View booking details
- * - Cancel booking option
- * - Responsive table/card layout
- *
- * Requires authentication (protected by middleware)
- */
-
 "use client"
 
-import { formatDate, formatPrice, getStatusColor } from "@/lib/utils"
+import servicesData from "@/data/services.json"
+import { formatDate, formatPrice } from "@/lib/utils"
 import axios from "axios"
 import { useSession } from "next-auth/react"
 import { useEffect, useState } from "react"
 import toast, { Toaster } from "react-hot-toast"
-import { FiCalendar, FiDollarSign, FiMapPin, FiX } from "react-icons/fi"
+import {
+  FiCheckCircle,
+  FiClock,
+  FiDollarSign,
+  FiMapPin,
+  FiX,
+} from "react-icons/fi"
 
 export default function MyBookingsPage() {
   const { data: session } = useSession()
   const [bookings, setBookings] = useState([])
   const [loading, setLoading] = useState(true)
 
-  /**
-   * Fetch user's bookings on page load
-   */
   useEffect(() => {
     async function fetchBookings() {
       try {
@@ -48,9 +37,6 @@ export default function MyBookingsPage() {
     }
   }, [session])
 
-  /**
-   * Handle booking cancellation
-   */
   const handleCancelBooking = async (bookingId) => {
     if (!confirm("Are you sure you want to cancel this booking?")) {
       return
@@ -62,7 +48,6 @@ export default function MyBookingsPage() {
       })
 
       toast.success("Booking cancelled successfully")
-      // Update local state
       setBookings(
         bookings.map((booking) =>
           booking._id === bookingId
@@ -76,9 +61,6 @@ export default function MyBookingsPage() {
     }
   }
 
-  /**
-   * Handle payment
-   */
   const handlePayment = async (bookingId) => {
     try {
       toast.loading("Creating payment session...")
@@ -92,7 +74,6 @@ export default function MyBookingsPage() {
       const data = await response.json()
 
       if (data.url) {
-        // Redirect to Stripe checkout
         window.location.href = data.url
       } else {
         toast.error("Failed to create payment session")
@@ -103,127 +84,199 @@ export default function MyBookingsPage() {
     }
   }
 
+  // Get service details by serviceId
+  const getServiceDetails = (serviceId) => {
+    return servicesData.find((s) => s.service_id === serviceId)
+  }
+
   if (loading) {
     return (
-      <div className="container mx-auto px-4 py-12">
-        <div className="flex justify-center">
-          <span className="loading loading-spinner loading-lg"></span>
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
+        <div className="text-center">
+          <span className="loading loading-spinner loading-lg text-[#C92C5C]"></span>
+          <p className="mt-4 text-gray-600 dark:text-gray-400">
+            Loading your bookings...
+          </p>
         </div>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-[#FFF0F3] dark:bg-gray-900 py-12">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-8">
       <div className="container mx-auto px-4">
         <Toaster position="top-center" />
 
-        <h1 className="text-3xl md:text-4xl font-bold font-serif mb-8 text-gray-900 dark:text-white">
-          My Bookings
-        </h1>
+        <div className="mb-8">
+          <h1 className="text-3xl md:text-4xl font-bold font-serif mb-2 text-gray-900 dark:text-white">
+            My Bookings
+          </h1>
+          <p className="text-gray-600 dark:text-gray-400">
+            Manage and track all your care service bookings
+          </p>
+        </div>
 
         {bookings.length === 0 ? (
-          <div className="card bg-white dark:bg-gray-800 shadow-lg">
-            <div className="card-body items-center text-center py-12">
-              <p className="text-lg opacity-70 mb-4">
-                You haven't made any bookings yet
-              </p>
-              <a
-                href="/services"
-                className="bg-[#C92C5C] hover:bg-[#A82349] text-white font-semibold py-3 px-6 rounded-lg transition-all shadow-md hover:shadow-lg"
-              >
-                Browse Services
-              </a>
+          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-12 text-center">
+            <div className="w-20 h-20 mx-auto mb-6 bg-[#FFF0F3] dark:bg-[#C92C5C]/20 rounded-full flex items-center justify-center">
+              <FiClock className="text-[#C92C5C]" size={40} />
             </div>
+            <h3 className="text-2xl font-bold mb-3 text-gray-900 dark:text-white">
+              No bookings yet
+            </h3>
+            <p className="text-gray-600 dark:text-gray-400 mb-6">
+              You haven't made any bookings yet. Browse our services to get
+              started!
+            </p>
+            <a
+              href="/services"
+              className="inline-block bg-[#C92C5C] hover:bg-[#A82349] text-white font-semibold py-3 px-8 rounded-lg transition-all shadow-md hover:shadow-lg"
+            >
+              Browse Services
+            </a>
           </div>
         ) : (
           <div className="grid grid-cols-1 gap-6">
-            {bookings.map((booking) => (
-              <div
-                key={booking._id}
-                className="card bg-white dark:bg-gray-800 shadow-lg hover:shadow-xl transition-shadow"
-              >
-                <div className="card-body">
-                  <div className="flex flex-wrap justify-between items-start gap-4">
-                    {/* Service Info */}
-                    <div className="flex-1">
-                      <h2 className="card-title text-xl mb-2 text-gray-900 dark:text-white">
-                        {booking.serviceName}
-                      </h2>
+            {bookings.map((booking) => {
+              const service = getServiceDetails(booking.serviceId)
 
-                      <div className="flex flex-wrap gap-4 text-sm opacity-70">
-                        <div className="flex items-center gap-1">
-                          <FiCalendar />
-                          <span>
-                            {booking.duration.value} {booking.duration.unit}
-                          </span>
-                        </div>
+              return (
+                <div
+                  key={booking._id}
+                  className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg hover:shadow-xl transition-all overflow-hidden border border-gray-200 dark:border-gray-700"
+                >
+                  <div className="md:flex">
+                    {/* Service Image */}
+                    <div className="md:w-1/3 lg:w-1/4 relative">
+                      <div className="aspect-[4/3] md:aspect-[3/4] relative">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                          src={service?.image || "/placeholder-service.jpg"}
+                          alt={booking.serviceName}
+                          className="absolute inset-0 w-full h-full object-cover"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
 
-                        <div className="flex items-center gap-1">
-                          <FiMapPin />
-                          <span>
-                            {booking.location.city}, {booking.location.area}
-                          </span>
-                        </div>
-
-                        <div className="flex items-center gap-1">
-                          <FiDollarSign />
-                          <span className="font-semibold text-[#C92C5C]">
-                            {formatPrice(booking.totalCost)}
-                          </span>
-                        </div>
-                      </div>
-
-                      <p className="text-xs opacity-60 mt-2">
-                        Booked on {formatDate(booking.createdAt)}
-                      </p>
-                    </div>
-
-                    {/* Status & Actions */}
-                    <div className="flex flex-col items-end gap-2">
-                      <span
-                        className={`badge ${getStatusColor(booking.status)}`}
-                      >
-                        {booking.status}
-                      </span>
-
-                      {booking.paymentStatus === "Paid" && (
-                        <span className="badge badge-success">Paid</span>
-                      )}
-
-                      {booking.paymentStatus === "Unpaid" &&
-                        booking.status !== "Cancelled" && (
-                          <button
-                            onClick={() => handlePayment(booking._id)}
-                            className="bg-[#C92C5C] hover:bg-[#A82349] text-white font-semibold py-2 px-4 rounded-lg inline-flex items-center gap-1 transition-all text-sm shadow-md hover:shadow-lg"
+                        {/* Status Badge on Image */}
+                        <div className="absolute top-4 left-4">
+                          <span
+                            className={`px-4 py-2 rounded-full text-sm font-bold shadow-lg backdrop-blur-sm ${
+                              booking.status === "Pending"
+                                ? "bg-orange-500/90 text-white"
+                                : booking.status === "Confirmed"
+                                ? "bg-blue-500/90 text-white"
+                                : booking.status === "Completed"
+                                ? "bg-green-500/90 text-white"
+                                : "bg-gray-500/90 text-white"
+                            }`}
                           >
-                            <FiDollarSign /> Pay Now
-                          </button>
+                            {booking.status}
+                          </span>
+                        </div>
+
+                        {/* Payment Status Badge */}
+                        {booking.paymentStatus === "Paid" && (
+                          <div className="absolute top-4 right-4">
+                            <span className="px-4 py-2 rounded-full text-sm font-bold bg-emerald-500 text-white shadow-lg backdrop-blur-sm inline-flex items-center gap-2">
+                              <FiCheckCircle /> Paid
+                            </span>
+                          </div>
                         )}
-
-                      {(booking.status === "Pending" ||
-                        booking.status === "Confirmed") && (
-                        <button
-                          onClick={() => handleCancelBooking(booking._id)}
-                          className="border-2 border-red-500 text-red-500 hover:bg-red-500 hover:text-white font-semibold py-2 px-4 rounded-lg inline-flex items-center gap-1 transition-all text-sm"
-                        >
-                          <FiX /> Cancel
-                        </button>
-                      )}
+                      </div>
                     </div>
-                  </div>
 
-                  {/* Full Address - Collapsible */}
-                  <div className="collapse collapse-arrow bg-gray-50 dark:bg-gray-700 mt-4">
-                    <input type="checkbox" />
-                    <div className="collapse-title text-sm font-medium">
-                      View Full Details
-                    </div>
-                    <div className="collapse-content">
-                      <div className="space-y-2 text-sm">
-                        <div>
-                          <span className="font-semibold">Location:</span>
-                          <p className="opacity-70">
+                    {/* Booking Details */}
+                    <div className="md:w-2/3 lg:w-3/4 p-6 md:p-8">
+                      <div className="flex flex-col h-full">
+                        {/* Header */}
+                        <div className="mb-4">
+                          <h2 className="text-2xl md:text-3xl font-bold mb-2 text-gray-900 dark:text-white">
+                            {booking.serviceName}
+                          </h2>
+                          <p className="text-sm text-gray-500 dark:text-gray-400">
+                            Booked on {formatDate(booking.createdAt)}
+                          </p>
+                        </div>
+
+                        {/* Details Grid */}
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+                          <div className="flex items-start gap-3">
+                            <div className="w-10 h-10 rounded-lg bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center flex-shrink-0">
+                              <FiClock
+                                className="text-blue-600 dark:text-blue-400"
+                                size={20}
+                              />
+                            </div>
+                            <div>
+                              <p className="text-sm text-gray-600 dark:text-gray-400">
+                                Duration
+                              </p>
+                              <p className="font-semibold text-gray-900 dark:text-white">
+                                {booking.duration.value} {booking.duration.unit}
+                              </p>
+                            </div>
+                          </div>
+
+                          <div className="flex items-start gap-3">
+                            <div className="w-10 h-10 rounded-lg bg-purple-50 dark:bg-purple-900/20 flex items-center justify-center flex-shrink-0">
+                              <FiMapPin
+                                className="text-purple-600 dark:text-purple-400"
+                                size={20}
+                              />
+                            </div>
+                            <div>
+                              <p className="text-sm text-gray-600 dark:text-gray-400">
+                                Location
+                              </p>
+                              <p className="font-semibold text-gray-900 dark:text-white">
+                                {booking.location.city}, {booking.location.area}
+                              </p>
+                            </div>
+                          </div>
+
+                          <div className="flex items-start gap-3">
+                            <div className="w-10 h-10 rounded-lg bg-green-50 dark:bg-green-900/20 flex items-center justify-center flex-shrink-0">
+                              <FiDollarSign
+                                className="text-green-600 dark:text-green-400"
+                                size={20}
+                              />
+                            </div>
+                            <div>
+                              <p className="text-sm text-gray-600 dark:text-gray-400">
+                                Total Cost
+                              </p>
+                              <p className="text-2xl font-bold text-[#C92C5C]">
+                                {formatPrice(booking.totalCost)}
+                              </p>
+                            </div>
+                          </div>
+
+                          {booking.paidAt && (
+                            <div className="flex items-start gap-3">
+                              <div className="w-10 h-10 rounded-lg bg-emerald-50 dark:bg-emerald-900/20 flex items-center justify-center flex-shrink-0">
+                                <FiCheckCircle
+                                  className="text-emerald-600 dark:text-emerald-400"
+                                  size={20}
+                                />
+                              </div>
+                              <div>
+                                <p className="text-sm text-gray-600 dark:text-gray-400">
+                                  Payment Date
+                                </p>
+                                <p className="font-semibold text-emerald-600 dark:text-emerald-400">
+                                  {formatDate(booking.paidAt)}
+                                </p>
+                              </div>
+                            </div>
+                          )}
+                        </div>
+
+                        {/* Full Address */}
+                        <div className="mb-6 p-4 bg-gray-50 dark:bg-gray-700/50 rounded-xl">
+                          <p className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1">
+                            Full Address:
+                          </p>
+                          <p className="text-sm text-gray-600 dark:text-gray-400">
                             {booking.location.address}, {booking.location.area}
                             <br />
                             {booking.location.city}, {booking.location.district}
@@ -232,25 +285,42 @@ export default function MyBookingsPage() {
                           </p>
                         </div>
 
-                        <div>
-                          <span className="font-semibold">Duration:</span>
-                          <p className="opacity-70">
-                            {booking.duration.value} {booking.duration.unit}
-                          </p>
-                        </div>
+                        {/* Action Buttons */}
+                        <div className="flex flex-wrap gap-3 mt-auto">
+                          {booking.paymentStatus === "Unpaid" &&
+                            booking.status !== "Cancelled" && (
+                              <button
+                                onClick={() => handlePayment(booking._id)}
+                                className="flex-1 min-w-[150px] bg-[#C92C5C] hover:bg-[#A82349] text-white font-semibold py-3 px-6 rounded-lg inline-flex items-center justify-center gap-2 transition-all shadow-md hover:shadow-lg"
+                              >
+                                <FiDollarSign size={20} /> Pay Now
+                              </button>
+                            )}
 
-                        <div>
-                          <span className="font-semibold">Total Cost:</span>
-                          <p className="opacity-70">
-                            {formatPrice(booking.totalCost)}
-                          </p>
+                          {(booking.status === "Pending" ||
+                            booking.status === "Confirmed") && (
+                            <button
+                              onClick={() => handleCancelBooking(booking._id)}
+                              className="flex-1 min-w-[150px] border-2 border-red-500 text-red-500 hover:bg-red-500 hover:text-white font-semibold py-3 px-6 rounded-lg inline-flex items-center justify-center gap-2 transition-all"
+                            >
+                              <FiX size={20} /> Cancel Booking
+                            </button>
+                          )}
+
+                          {booking.paymentStatus === "Paid" &&
+                            booking.status !== "Cancelled" && (
+                              <div className="flex-1 min-w-[150px] bg-emerald-50 dark:bg-emerald-900/20 border-2 border-emerald-500 text-emerald-700 dark:text-emerald-300 font-semibold py-3 px-6 rounded-lg inline-flex items-center justify-center gap-2">
+                                <FiCheckCircle size={20} />
+                                Payment Completed
+                              </div>
+                            )}
                         </div>
                       </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              )
+            })}
           </div>
         )}
       </div>
