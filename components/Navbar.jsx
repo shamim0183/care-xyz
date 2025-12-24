@@ -209,11 +209,10 @@ export default function Navbar() {
               >
                 <div className="w-12 h-12 aspect-square rounded-full bg-gradient-to-br from-[#C92C5C] to-[#A82349] text-white flex items-center justify-center overflow-hidden ring-2 ring-[#C92C5C]/30 shadow-lg hover:shadow-xl transition-all">
                   {session.user.image ? (
-                    <Image
+                    /* eslint-disable-next-line @next/next/no-img-element */
+                    <img
                       src={session.user.image}
                       alt={session.user.name}
-                      width={48}
-                      height={48}
                       className="w-full h-full object-cover rounded-full"
                       referrerPolicy="no-referrer"
                     />
