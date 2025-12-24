@@ -1,30 +1,26 @@
 /**
  * Middleware for Route Protection
  *
- * Simple middleware that redirects unauthenticated users to login.
- * Does NOT import MongoDB - uses only NextAuth session checking.
+ * Uses NextAuth's auth() function for proper session verification on Vercel.
+ * This approach is more compatible with Edge Runtime and serverless environments.
  */
 
-import { getToken } from "next-auth/jwt"
+import { auth } from "@/lib/auth"
 import { NextResponse } from "next/server"
 
 export async function middleware(request) {
-  const token = await getToken({
-    req: request,
-    secret: process.env.NEXTAUTH_SECRET,
-  })
-
+  const session = await auth()
   const { pathname } = request.nextUrl
 
   // Check if user is authenticated
-  if (!token) {
+  if (!session || !session.user) {
     const loginUrl = new URL("/login", request.url)
     loginUrl.searchParams.set("callbackUrl", pathname)
     return NextResponse.redirect(loginUrl)
   }
 
   // Check admin routes
-  if (pathname.startsWith("/admin") && token.role !== "admin") {
+  if (pathname.startsWith("/admin") && session.user.role !== "admin") {
     return NextResponse.redirect(new URL("/", request.url))
   }
 
