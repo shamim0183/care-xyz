@@ -48,7 +48,7 @@ export default function HomePage() {
               care possible. Our platform connects you with verified,
               experienced caregivers who provide compassionate and professional
               services. Whether you need baby care, elderly support, or
-              assistance for sick family members, we're here to help.
+              assistance for sick family members, we&apos;re here to help.
             </p>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12">
               <div className="card bg-white dark:bg-gray-700 shadow-lg hover:shadow-xl transition-shadow">
@@ -92,7 +92,7 @@ export default function HomePage() {
             </h2>
             <p className="text-lg max-w-2xl mx-auto text-gray-600 dark:text-gray-400">
               Choose from our range of professional caregiving services tailored
-              to meet your family's unique needs
+              to meet your family&apos;s unique needs
             </p>
           </div>
 
@@ -145,12 +145,15 @@ export default function HomePage() {
                   </div>
 
                   {/* Review Text */}
-                  <p className="text-sm opacity-80 mb-4">"{review.review}"</p>
+                  <p className="text-sm opacity-80 mb-4">
+                    &quot;{review.review}&quot;
+                  </p>
 
                   {/* Reviewer Info */}
                   <div className="flex items-center gap-3">
                     <div className="avatar">
                       <div className="w-12 h-12 rounded-full">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img src={review.photoURL} alt={review.userName} />
                       </div>
                     </div>

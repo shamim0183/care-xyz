@@ -26,7 +26,7 @@ export default function ServicesPage() {
         </h1>
         <p className="text-lg opacity-70 max-w-3xl mx-auto">
           Professional and compassionate care services tailored to meet your
-          family's needs. Choose from our range of specialized caregiving
+          family&apos;s needs. Choose from our range of specialized caregiving
           options.
         </p>
       </div>
